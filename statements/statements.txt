@@ -4,6 +4,8 @@ effect: Effect:
 success: Success:
 abort: Abort:
 chance: Aquisition chance:
+trigger: Trigger:
+mean_time_to_happen: Mean time to happen
 add_base_tax: Gains %s base tax
 add_prestige: Gives %s prestige
 set_capital: Sets capital to %s

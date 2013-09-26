@@ -11,19 +11,29 @@ def main(file):
         if nesting <= 1:
             continue #Nothing relevant is nested this low
         if nesting == 2:
-            if nestingIncrement == 1: #At these values the name is encountered
-                name = re.search("\w*", line).group(0)+"_title" #Finds just the name identifier
-                if name in lookup:
-                    name = lookup[name]
+            if folder != "events":
+                if nestingIncrement == 1: #At these values the name is encountered
+                    name = re.search("\w*", line).group(0)+"_title" #Finds just the name identifier
+                    if name in lookup:
+                        name = lookup[name]
+                    output(name, 2)
+            elif "title" in line:
+                name = getValue(line) #Finds just the title identifier
+                if name in events:
+                    name = events[name]
                 output(name, 2)
-            elif nestingIncrement == -1: #End of relevant section
+            if nestingIncrement == -1: #End of relevant section
                 printSection = 0
             continue #Nothing more to do this iteration
         elif folder == "decisions":
             if "potential" in line or "allow" in line or "effect" in line:
                 printSection = 1 #Only these sections are relevant
         elif folder == "missions":
-            if "allow" in line or "success" in line or "effect" in line and not "abort_effect" in line:
+            if "allow" in line or "success" in line or "abort" in line or "effect" in line:
+                if not "abort_effect" in line:
+                    printSection = 1 #Only these sections are relevant
+        elif folder == "events":
+            if "trigger" in line or "mean_time_to_happen" in line or "option" in line or "immediate" in line:
                 printSection = 1 #Only these sections are relevant
         if printSection == 0:
             continue #Nothing more to do this iteration
@@ -235,7 +245,10 @@ def valueLookup(value, command):
         if value in lookup:
             value = lookup[value]
             valueType = "other"
-
+        if folder == "events":
+            if value in events:
+                value = events[value]
+                valueType = "event"
     return(value, valueType)
 
 #Lookup of human-readable string
@@ -287,7 +300,7 @@ folder = settings["folder"]
 specificFile = settings["file"]
 if folder == "decisions":
     nesting, nestingIncrement = 0, 0
-elif folder == "missions":
+elif folder == "missions" or folder == "events":
     nesting, nestingIncrement = 1, 0 #One less level of irrelevant nesting
 
 #Dictionaries of known statements
@@ -308,6 +321,11 @@ try:
     lookup.update(read_definitions("Purple_Phoenix"))
     lookup.update(read_definitions("core"))
     lookup.update(read_definitions("missions"))
+    events = read_definitions("generic_events")
+    events.update(read_definitions("flavor_events"))
+    events.update(read_definitions("EU4"))
+    events.update(read_definitions("muslim_dlc"))
+    events.update(read_definitions("Purple_Phoenix"))
     
     if specificFile == "no":
         for file in os.listdir("%s/%s" % (path, folder)):
