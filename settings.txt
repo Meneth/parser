@@ -1,3 +1,8 @@
-path: C:\Program Files (x86)\Steam\SteamApps\common\Europa Universalis IV
-folder: decisions
-file: no
+Path to your EU4 folder. Backward or forward slashes are both accepted
+	path: E:\Steam\SteamApps\common\Europa Universalis IV
+
+Folder you want to parse. Decisions, missions, and events are accepted
+	folder: events
+
+File you want to parse. "no" in order to parse all files in folder. No .txt extension
+	file: AmericanRevolution
