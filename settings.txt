@@ -1,0 +1,3 @@
+path: C:\Program Files (x86)\Steam\SteamApps\common\Europa Universalis IV
+folder: decisions
+file: no

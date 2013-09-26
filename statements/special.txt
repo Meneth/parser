@@ -1,0 +1,11 @@
+add_country_modifier: Adds the modifier "%s" for %s:
+add_province_modifier: Adds the modifier "%s" for %s:
+add_ruler_modifier: Adds the modifier "%s" for %s:
+has_opinion: Has an opinion of at least %s with %s
+has_opinion_false: Has an opinion of less than %s with %s
+add_opinion: Adds the opinion modifier "%s" towards %s
+reverse_add_opinion: Adds the opinion modifier "%s" from %s
+num_of_religion: At least %s provinces follow the %s religion
+num_of_religion_false: Less than %s provinces follow the %s religion
+religion_years: The %s religion has existed for at least %s years
+religion_years_false: The %s religion has existed for less than %s years

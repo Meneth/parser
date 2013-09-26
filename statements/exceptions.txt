@@ -1,0 +1,5 @@
+countryCommands: "culture_group", "culture", "religion", "religion_group", "has_discovered", "infantry", "cavalry", "add_core", "exists", "change_primary_culture", "heavy_ship", "light_ship", "is_claim", "primary_culture"
+provinceCommands: "set_capital", "owns", "is_core", "add_claim", "remove_claim", "capital", "owns_core_province", "add_core", "remove_core", "infantry", "cavalry", "owns_or_vassal_of", "controls", "is_claim"
+specialCommands: "add_country_modifier", "has_opinion", "add_opinion", "reverse_add_opinion", "add_province_modifier", "num_of_religion", "add_ruler_modifier", "religion_years"
+	value1: "value", "name", "modifier"
+	value2: "duration", "who", "religion"
