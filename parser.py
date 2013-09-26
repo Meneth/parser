@@ -57,7 +57,7 @@ def main(file):
             line, negative = formatLine(line, negative) #Looks up the command and value, and formats the string
             if line != "":
                 output(line, negative)
-        elif nestingIncrement == -1:
+        elif nestingIncrement == -1 and specialSection == 1:
             specialSection = 0
             #Outputs commands that span multiple lines
             if negative == 1:

@@ -182,8 +182,8 @@ owns: Owns %s
 owns_false: Does not own %s
 is_core: Has core on %s
 is_core_false: Has no core on %s
-owned_by: Is owned by %s
-owned_by_false: Is not owned by %s
+owned_by: The province is owned by %s
+owned_by_false: The province is not owned by %s
 mercantilism: Mercantilism is at least %s%%
 mercantilism_false: Mercantilism is less than %s%%
 trade_efficiency: Trade efficiency is at least %s%%
@@ -414,8 +414,8 @@ has_regency: Is in regency
 has_regency_false: Is not in regency
 has_heir: Has an heir
 has_heir_false: Has no heir
-is_capital: Province is the capital of the country
-is_capital_false: Province is not the capital of the country
+is_capital: The province is the capital of the country
+is_capital_false: The province is not the capital of the country
 reform_desire: Reform desire is at least %s%%
 reform_desire_false: Reform desire is less than %s%%
 has_ruler_modifier: Has the ruler modifier %s

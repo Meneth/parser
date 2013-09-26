@@ -9,3 +9,5 @@ num_of_religion: At least %s provinces follow the %s religion
 num_of_religion_false: Less than %s provinces follow the %s religion
 religion_years: The %s religion has existed for at least %s years
 religion_years_false: The %s religion has existed for less than %s years
+has_casus_belli: Has the casus belli %s on %s
+has_casus_belli_false: Does not have the casus belli %s on %s
