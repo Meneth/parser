@@ -1,3 +1,5 @@
+UNAMBIGIOUS STATEMENTS
+
 potential: Potential:
 allow: Allow:
 effect: Effect:
@@ -101,9 +103,9 @@ remove_claim: Removes claim on %s
 remove_claim_country: Removes %s's claim
 FROM: Our country:
 owner: The owner of the province:
-:
-#MODIFIERS:
-:
+
+MODIFIERS
+
 global_tax_modifier: %s%% global tax modifier
 global_revolt_risk: %s revolt risk
 stability_cost_modifier: %s%% stability cost modifier
@@ -165,9 +167,9 @@ idea_cost: %s%% idea cost
 missionaries: %s missionaries
 war_exhaustion_cost: %s%% war exhaustion cost
 embargo_efficiency: %s%% embargo efficiency
-:
-#BINARY STATEMENTS:
-:
+
+BINARY STATEMENTS
+
 tag: Country is %s
 tag_false: Country is not %s
 is_year: Year is at least %s

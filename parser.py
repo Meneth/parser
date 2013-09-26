@@ -83,6 +83,8 @@ def read_statements(type):
     statements = {}
     with open('%s.txt' % type) as effects_file:
         for line in effects_file.readlines():
+            if not ":" in line:
+                continue
             line = line.strip()
             statement_name, format_string = line.split(':', 1)
             statements[statement_name.strip()] = format_string.strip()
