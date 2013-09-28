@@ -106,7 +106,7 @@ def read_definitions(name):
                     print ("%d -> %s, e : %s" % (line_number, line, e))
             definitions[id.strip()] = value.strip().strip('"')
             line_number += 1
-     
+    
     return definitions
 
 #Splits the file at every bracket to ensure proper parsing
@@ -271,11 +271,11 @@ def getModifier(modifier):
         if modifierFound == 1 and not "icon" in line:
             if "}" in line:
                 break #End of modifier found
-            line, negative = formatLine(line, 0)
+            line = formatLine(line, 0)[0]
             if re.match("[0-9]", line):
                 line = "+" + line
             output(line, 0)
-        elif getCommand(line) == modifier:
+        elif modifier in line:
             modifierFound = 1
 
 #Output line
