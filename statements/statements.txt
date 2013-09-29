@@ -57,6 +57,7 @@ change_primary_culture: Change the primary culture to %s
 change_primary_culture_country: Change the primary culture to be same same as %s's culture
 add_stability: Changes stability by %s
 set_country_flag: Sets the country flag %s
+clr_country_flag: Removes the country flag %s
 set_global_flag: Sets the global flag %s
 add_treasury: Changes treasury by %s ducats
 hidden_effect: Hidden effect:
@@ -95,14 +96,44 @@ type:
 any_neighbor_country: Any neighboring country:
 emperor: Holy Roman Emperor:
 inherit: Inherit %s
-factor: Multiplies chance by %s
-modifier: Chance modifier:
+factor: Multiplies value by %s:
+factor_base: Base chance of %s
+modifier:
+months: Base mean time to happen of %s months
+ai_chance: AI chance:
 all_target_province: All target provinces:
 every_target_province: Every target province:
 remove_claim: Removes claim on %s
 remove_claim_country: Removes %s's claim
 FROM: Our country:
 owner: The owner of the province:
+remove_faction: Removes the %s
+anti_tax_rebels: Spawns %s regiments of peasant rebels
+particularist_rebels: Spawns %s regiments of particularist rebels
+nationalist_rebels: Spawns %s regiments of nationalist rebels
+patriot_rebels: Spawns %s regiments of patriot rebels
+colonial_rebels: Spawns %s regiments of colonial rebels
+colonial_patriot_rebels: Spawns %s regiments of colonial patriot rebels
+revolutionary_rebels: Spawns %s regiments of revolutionary rebels
+noble_rebels: Spawns %s regiments of noble rebels
+heretic_rebels: Spawns %s regiments of heretic rebels
+pretender_rebels: Spawns %s regiments of pretender rebels
+ronin_rebels: Spawns %s regiments of Ronin rebels
+ikko_ikki_rebels: Spawns %s regiments of Ikko-Ikkis rebels
+reactionary_rebels: Spawns %s regiments of reactionary rebels
+lollard_rebels: Spawns %s regiments of Lollard rebels
+catholic_rebels: Spawns %s regiments of Catholic rebels
+protestant_rebels: Spawns %s regiments of Protestant rebels
+reformed_rebels: Spawns %s regiments of Reformed rebels
+orthodox_rebels: Spawns %s regiments of Orthodox rebels
+sunni_rebels: Spawns %s regiments of Sunni rebels
+shiite_rebels: Spawns %s regiments of Shiite rebels
+buddhism_rebels: Spawns %s regiments of Buddhist rebels
+hinduism_rebels: Spawns %s regiments of Hindu rebels
+confucianism_rebels: Spawns %s regiments of Confucian rebels
+shinto_rebels: Spawns %s regiments of Shinto rebels
+animism_rebels: Spawns %s regiments of Animist rebels
+shamanism_rebels: Spawns %s regiments of Shamanist rebels
 
 MODIFIERS
 
@@ -167,6 +198,8 @@ idea_cost: %s%% idea cost
 missionaries: %s missionaries
 war_exhaustion_cost: %s%% war exhaustion cost
 embargo_efficiency: %s%% embargo efficiency
+local_manpower_modifier: %s%% manpower modifier
+local_revolt_risk: %s revolt risk
 
 BINARY STATEMENTS
 
@@ -255,7 +288,7 @@ quantity_ideas_false: Has less than %s Quantity ideas
 expansion_ideas_false: Has less than %s Expansion ideas
 administrative_ideas_false: Has less than %s Administrative ideas
 government: Has the %s government type
-government_false: Doesn't have the %s government type
+government_false: Does not have the %s government type
 adm_tech: Administrative technology is at least %s
 dip_tech: Diplomatic technology is at least %s
 mil_tech: Military technology is at least %s
@@ -263,21 +296,21 @@ adm_tech_false: Administrative technology is lower than %s
 dip_tech_false: Diplomatic technology is lower than %s
 mil_tech_false: Military technology is lower than %s
 advisor: Has the %s advisor
-advisor_false: Doesn't have a %s advisor
+advisor_false: Does not have a %s advisor
 religion: Follows the %s religion
 religion_group: Is in the %s religion group
-religion_false: Doesn't follow the %s religion
+religion_false: Does not follow the %s religion
 religion_group_false: Is not in %s's religion group
 religion_country: Follows %s's religion
 religion_group_country: Is in %s's religion group
-religion_country_false: Doesn't follow %s's religion
+religion_country_false: Does not follow %s's religion
 religion_country_group_false: Is not in %s's religion group
 has_idea: Has the idea %s
 has_idea_false: Does not have the idea %s
 overextension_percentage: Overextension is at least %s%%
 overextension_percentage_false: Overextension is less than %s%%
 has_building: Has the %s building
-has_building_false: Doesn't have the %s building
+has_building_false: Does not have the %s building
 grain:Has at least %s provinces producing grain
 wine:Has at least %s provinces producing wine
 wool:Has at least %s provinces producing wool
@@ -357,9 +390,9 @@ num_of_ports_false: Has less than %s ports
 num_of_total_ports: Has at least %s ports
 num_of_total_ports_false: Has less than %s ports
 has_country_flag: Has the country flag %s
-has_country_flag_false: Doesn't have the country flag %s
+has_country_flag_false: Does not have the country flag %s
 has_global_flag: Has the global flag %s
-has_global_flag_false: Doesn't have the global flag %s
+has_global_flag_false: Does not have the global flag %s
 has_discovered: Has discovered %s
 has_discovered_false: Has not discovered %s
 has_discovered_country: Has been discovered by %s
@@ -403,9 +436,9 @@ navy_size_percentage_false: Navy is less than %s%% of the force limit
 owns_or_vassal_of: %s is owned by the country or a vassal
 owns_or_vassal_of_false: %s is not owned by the country or a vassal
 has_dlc: Has the DLC %s
-has_dlc_false: Doesn't have the DLC %s
+has_dlc_false: Does not have the DLC %s
 controls: Controls the province %s
-controls_false: Doesn't control the province %s
+controls_false: Does not control the province %s
 junior_union_with: Junior union partner under %s
 junior_union_with_false: Not junior union partner under %s
 senior_union_with: Senior union partner over %s
@@ -423,9 +456,9 @@ is_capital_false: The province is not the capital of the country
 reform_desire: Reform desire is at least %s%%
 reform_desire_false: Reform desire is less than %s%%
 has_ruler_modifier: Has the ruler modifier %s
-has_ruler_modifier_false: Doesn't have the ruler modifier %s
+has_ruler_modifier_false: Does not have the ruler modifier %s
 has_owner_religion: Follows the religion of its owner
-has_owner_religion_false: Doesn't follow the religion of its owner
+has_owner_religion_false: Does not follow the religion of its owner
 is_defender_of_faith: Is the defender of the faith
 is_defender_of_faith_false: Isn't the defender of the faith
 is_emperor: Is the Holy Roman Emperor
@@ -441,7 +474,7 @@ continent_false: Not in the continent %s
 always: Always true
 always_false: Always false
 trade_goods: Produces %s
-trade_goods_false: Doesn't produce %s
+trade_goods_false: Does not produce %s
 can_build: Can build the %s building
 can_build_false: Can't build the %s building
 any_owned_province: Any owned province:
@@ -466,3 +499,5 @@ num_of_infantry: Has at least as much infantry as %s
 num_of_infantry_false: Has less infantry than %s
 is_neighbor_of: Is a neighbor of %s
 is_neighbor_of_false: Is not a neighbor of %s
+revolt_risk: Revolt risk of at least %s
+revolt_risk_false: Revolt risk lower than %s

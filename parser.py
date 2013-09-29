@@ -2,7 +2,7 @@ def main(file):
     open("output/%s" % file, 'w') #Clears out the output file
     file = structureFile(file) #Transcribes game file to more parseable format
     file = open("temp.txt", "r") #The restructured file
-    specialSection, negative, negativeNesting, printSection, n = 0, 0, 0, 0, 0
+    specialSection, negative, negativeNesting, printSection, n, base_chance, option = 0, 0, 0, 0, 0, 0, 0
     for line in file:
         if line == "":
             continue #Nothing to do this iteration
@@ -35,6 +35,25 @@ def main(file):
         elif folder == "events":
             if "trigger" in line or "mean_time_to_happen" in line or "option" in line or "immediate" in line:
                 printSection = 1 #Only these sections are relevant
+                if "option" in line:
+                    option = 1
+                    continue #This is handled by the "name" attribute instead
+            elif "ai_chance" in line:
+                base_chance = 1 #Tells the parser to look for the base chance
+            elif "factor" in line:
+                if base_chance == 0:
+                    line = statementLookup(line, statements, "factor", getValue(line))
+                    output(line, 1)
+                else:
+                    line = statementLookup(line, statements, "factor_base", getValue(line))
+                    base_chance = 0
+                    output(line, 0)
+                continue #Nothing more to do here
+            elif option == 1 and "name" in line:
+                line = "Option: "+valueLookup(getValue(line), "name")[0]+":" #Shows clearly that it is an option
+                output(line, 1)
+                option = 0
+                continue #Nothing more to do here
         if printSection == 0:
             continue #Nothing more to do this iteration
         #These commands span multiple lines, so they need special handling
@@ -67,7 +86,7 @@ def main(file):
             line, negative = formatLine(line, negative) #Looks up the command and value, and formats the string
             if line != "":
                 output(line, negative)
-        elif nestingIncrement == -1 and specialSection == 1:
+        elif nestingIncrement == -1:
             specialSection = 0
             #Outputs commands that span multiple lines
             if negative == 1:
