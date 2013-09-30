@@ -8,7 +8,6 @@ def main(file):
         if line == "":
             continue #Nothing to do this iteration
         nestingCheck(line) #Determines how deeply nested the current line is
-        negative, line, negativeNesting = negationCheck(negative, line, negativeNesting)
         if nesting <= 1:
             continue #Nothing relevant is nested this low
         if nesting == 2:
@@ -33,7 +32,9 @@ def main(file):
             if nestingIncrement == -1: #End of relevant section
                 printSection = 0
             continue #Nothing more to do this iteration
-        elif folder == "decisions":
+        else:
+            negative, line, negativeNesting = negationCheck(negative, line, negativeNesting)
+        if folder == "decisions":
             if "potential" in line or "allow" in line or "effect" in line:
                 printSection = 1 #Only these sections are relevant
         elif folder == "missions":
@@ -148,6 +149,8 @@ def structureFile(name):
     with open('%s/%s/%s' % (path, folder, name), encoding="Windows-1252") as file:
         output = open("temp.txt", "w")
         for line in file.readlines():
+            if line.startswith("#"):
+                continue
             line = line.strip().replace("{", "{\n").replace("}", "\n}") #Splits line at brackets
             line = re.sub("(=[ ]*[\w]*) ([\w]*[ ]*=)", "\g<1>\n\g<2>", line).strip() #Splits lines with more than one statement in two
             if line != "":
@@ -179,9 +182,8 @@ def negationCheck(negative, line, negativeNesting):
 def formatLine(line, negative):
     command = getCommand(line)
     value = getValue(line)
-    if command in statements:
-        if "%%" in statements[command]: #Percentage values should be multiplied
-            value = str(round(100*float(value), 1)).rstrip("0").rstrip(".")
+    if command in statements and "%%" in statements[command]: #Percentage values should be multiplied
+        value = str(round(100*float(value), 1)).rstrip("0").rstrip(".")
     
     #Local negation
     if value == "no":
@@ -204,9 +206,9 @@ def formatLine(line, negative):
             command = command+"_false" #Unique lookup string for false version
         elif "any_" in command:
             command = command+"_false"
-            negative = 0 #Contents don't need to be negated
+            negative = 0 #Contents of a "none of the following" scope don't need to be negated
     
-    #Print code if no substitute is found
+    #Fallback code in case the lookups fail
     if value != "":
         line = "%s = %s" % (command, value)
     else:
@@ -224,17 +226,15 @@ def formatLine(line, negative):
     return(line, negative)
 
 def getCommand(line):
-    #Find command
-    if re.search("[\w]*[ ]*=", line):
+    if re.search("[\w]*[ ]*=", line): #Looks for the string before the equals sign
         command = re.search("[\w]*[ ]*=", line).group(0)
         return re.sub("[ ]*=", "", command).strip()
     else:
         return ""
 
 def getValue(line):
-    #Find value
-    if re.search("=[ ]*[-.\w]*", line):
-        if '"' in line:
+    if re.search("=[ ]*[-.\w]*", line): #Looks for the string after  the equals sign
+        if '"' in line: #These strings may have spaces in them
             value = re.search('=[ ]*(".*")', line).group(1)
         else:
             value = re.search("=[ ]*[-.\w\"]*", line).group(0)
@@ -243,7 +243,7 @@ def getValue(line):
         return ""
 
 def valueLookup(value, command):
-    valueType = ""
+    valueType = "other"
 
     #Root
     if value == "ROOT" or value == "root":
