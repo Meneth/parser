@@ -3,6 +3,7 @@ def main(file):
     file = structureFile(file) #Transcribes game file to more parseable format
     file = open("temp.txt", "r") #The restructured file
     specialSection, negative, negativeNesting, printSection, n, base_chance, option = 0, 0, 0, 0, 0, 0, 0
+    value1, value2 = "", ""
     for line in file:
         if line == "":
             continue #Nothing to do this iteration
@@ -22,6 +23,13 @@ def main(file):
                 if name in events:
                     name = events[name]
                 output(name, 2)
+                if specialSection == "province_event":
+                    output("Province event", -1)
+                    specialSection = 0
+            elif "province_event" in line:  #This should be printed after the name of the event
+                specialSection = "province_event"
+            elif "fire_only_once" in line:  #One of the few instances of relevant info that isn't a title on this nesting level
+                output("Can only fire once", -1)
             if nestingIncrement == -1: #End of relevant section
                 printSection = 0
             continue #Nothing more to do this iteration
@@ -91,11 +99,18 @@ def main(file):
             #Outputs commands that span multiple lines
             if negative == 1:
                 specialType = specialType+"_false"
-            if specialType in special:
-                line = special[specialType] % (value1, value2)
+            if value2 != "":
+                if specialType == "spawn_rebels":
+                    line = special[specialType] % (value2, value1)
+                elif specialType in special:
+                    line = special[specialType] % (value1, value2)
+            elif specialType in statements:
+                line = statements[specialType] % (value1)
             output(line, negative+1)
-            if specialType == "add_country_modifier" or specialType == "add_province_modifier":
+            if specialType == "add_country_modifier" or specialType == "add_province_modifier" or specialType == "add_ruler_modifier":
                 getModifier(modifier) #Looks up the effects of the actual modifier
+            value1 = ""
+            value2 = ""
 
 #Reads in a statement file as a dictionary
 def read_statements(type):
@@ -212,73 +227,62 @@ def getCommand(line):
     #Find command
     if re.search("[\w]*[ ]*=", line):
         command = re.search("[\w]*[ ]*=", line).group(0)
-        command = re.sub("[ ]*=", "", command).strip()
+        return re.sub("[ ]*=", "", command).strip()
     else:
-        command = ""
-    return command
+        return ""
 
 def getValue(line):
     #Find value
     if re.search("=[ ]*[-.\w]*", line):
         if '"' in line:
-            value = re.search('=[ ](".*")', line).group(1)
+            value = re.search('=[ ]*(".*")', line).group(1)
         else:
             value = re.search("=[ ]*[-.\w\"]*", line).group(0)
-        value = re.sub("=[ ]*", "", value).strip('"').strip()
+        return re.sub("=[ ]*", "", value).strip('"').strip()
     else:
-        value = ""
-    return value
+        return ""
 
 def valueLookup(value, command):
-    valueAssigned = 0
     valueType = ""
 
     #Root
     if value == "ROOT" or value == "root":
-        value = "our country"
-        valueAssigned = 1
-        valueType = "country"
-    elif value == "FROM" or value == "from":
-        value = "our country"
-        valueAssigned = 1
-        valueType = "country"
+        return "our country", "country"
+    if value == "FROM" or value == "from":
+        return "our country", "country"
     
     #Assign country. 3 capitalized letters in a row is a country tag
     elif len(value) == 3 and re.match("[A-Z]{3}", value):
         if value in countries:
-            value = countries[value]
-            valueAssigned = 1
-            valueType = "country"
+            return countries[value], "country"
         elif value in lookup: #For some reason, not all countries are in country localisation
-            value = lookup[value]
-            valueAssigned = 1
-            valueType = "country"
+            return lookup[value], "country"
     
     #Assign province
     if command in exceptions["provinceCommands"]: #List of statements that check provinces
         if "PROV"+value in provinces:
-            value = provinces["PROV"+value]
-            valueAssigned = 1
-            valueType = "province"
+            return provinces["PROV"+value], "province"
     
     #Attempt to look up
     if value != "" and re.match("[a-zA-Z]", value): #Numbers that aren't provinces are just regular numbers
         if value in lookup:
-            value = lookup[value]
-            valueType = "other"
+            return lookup[value], "other"
+        elif "building_"+value in lookup:
+            return lookup["building_"+value], "other"
+        elif value+"_title" in lookup:
+            return lookup[value+"_title"], "other"
         if folder == "events":
             if value in events:
-                value = events[value]
-                valueType = "event"
+                return events[value], "event"
     return(value, valueType)
 
 #Lookup of human-readable string
 def statementLookup(line, check, command, value):
     if command in check:
         if "%s" in check[command]:
-            line = check[command] % value
+            return check[command] % value
         else:
-            line = check[command]
+            return check[command]
     return(line)
 
 #Looks up the actual effects of modifiers
@@ -293,7 +297,8 @@ def getModifier(modifier):
             line = formatLine(line, 0)[0]
             if re.match("[0-9]", line):
                 line = "+" + line
-            output(line, 0)
+            if line.strip() != "":
+                output(line, 0)
         elif modifier in line:
             modifierFound = 1
 

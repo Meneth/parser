@@ -8,8 +8,9 @@ abort: Abort:
 chance: Aquisition chance:
 trigger: Trigger:
 mean_time_to_happen: Mean time to happen
-add_base_tax: Gains %s base tax
-add_prestige: Gives %s prestige
+immediate: Immediate effects:
+add_base_tax: Changes base tax by %s
+add_prestige: Changes prestige by %s
 set_capital: Sets capital to %s
 change_government: Changes government type to %s
 change_tag: Changes country to %s
@@ -59,6 +60,9 @@ add_stability: Changes stability by %s
 set_country_flag: Sets the country flag %s
 clr_country_flag: Removes the country flag %s
 set_global_flag: Sets the global flag %s
+clr_global_flag: Removes the global flag %s
+set_province_flag: Sets the province flag %s
+clr_province_flag: Removes the province flag %s
 add_treasury: Changes treasury by %s ducats
 hidden_effect: Hidden effect:
 IF: If:
@@ -71,11 +75,13 @@ add_core_country: Gives %s core on the province
 remove_core: Removes core on %s
 any_country: Any country:
 every_country: Every country:
+random_country: Random country:
 every_owned_province: Every owned province:
 add_legitimacy: Adds %s legitimacy
 release: Release %s as a vassal
 add_war_exhaustion: Changes war exhaustion by %s
 add_army_tradition: Changes army tradition by %s
+add_navy_tradition: Changes navy tradition by %s
 cavalry: Spawns a cavalry unit in %s
 infantry: Spawns an infantry unit in %s
 heavy_ship: Spawns a heavy ship in %s
@@ -100,6 +106,7 @@ factor: Multiplies value by %s:
 factor_base: Base chance of %s
 modifier:
 months: Base mean time to happen of %s months
+days: Base mean time to happen of %s days
 ai_chance: AI chance:
 all_target_province: All target provinces:
 every_target_province: Every target province:
@@ -134,6 +141,18 @@ confucianism_rebels: Spawns %s regiments of Confucian rebels
 shinto_rebels: Spawns %s regiments of Shinto rebels
 animism_rebels: Spawns %s regiments of Animist rebels
 shamanism_rebels: Spawns %s regiments of Shamanist rebels
+add_papal_influence: Changes Papal Influence by %s
+add_revolt_risk: Changes revolt risk by %s
+add_ruler_modifier: Adds the ruler modifier "%s" until the ruler's death:
+add_province_modifier: Adds the modifier "%s" until the end of the campaign:
+create_advisor: Creates a %s advisor
+kill_advisor: Kills the %s advisor
+remove_advisor: Removes the %s advisor
+add_heir_claim: Changes the heir's legitimacy by %s
+change_trade_goods: Changes trade goods produced to %
+create_revolt: Spawns %s rebel regiments
+kill_ruler: Kills the ruler of the country
+kill_heir: Kills the heir of the country
 
 MODIFIERS
 
@@ -148,6 +167,7 @@ mil_tech_cost_modifier: %s%% military technology cost
 global_missionary_strength: %s%% global missionary strength
 production_efficiency: %s%% production efficiency modifier
 prestige: %s prestige
+prestige_false: %s prestige
 diplomatic_reputation: %s diplomatic reputation
 papal_influence: %s Papal influence per year
 core_creation: %s%% core-creation cost modifier
@@ -200,6 +220,9 @@ war_exhaustion_cost: %s%% war exhaustion cost
 embargo_efficiency: %s%% embargo efficiency
 local_manpower_modifier: %s%% manpower modifier
 local_revolt_risk: %s revolt risk
+trade_value: %s trade value
+trade_goods_size: %s%% trade goods output
+global_prov_trade_power_modifier: %s%% provincial trade power
 
 BINARY STATEMENTS
 
@@ -213,8 +236,12 @@ exists: Country exists
 exists_false: Country does not exist
 is_subject: Is a vassal
 is_subject_false: Is not a vassal
+is_subject_of: Is a vassal of %s
+is_subject_of_false: Is not a vassal of %s
 is_at_war: Is at war
 is_at_war_false: Is not at war
+truce_with: Has a truce with %s
+truce_with_false: Has no truce with %s
 owns: Owns %s
 owns_false: Does not own %s
 is_core: Has core on %s
@@ -393,6 +420,8 @@ has_country_flag: Has the country flag %s
 has_country_flag_false: Does not have the country flag %s
 has_global_flag: Has the global flag %s
 has_global_flag_false: Does not have the global flag %s
+has_province_flag: Has the province flag %s
+has_province_flag_false: Does not have the province flag %s
 has_discovered: Has discovered %s
 has_discovered_false: Has not discovered %s
 has_discovered_country: Has been discovered by %s
@@ -433,6 +462,8 @@ war_with: At war with %s
 war_with_false: Not at war with %s
 navy_size_percentage: Navy is at least %s%% of the force limit
 navy_size_percentage_false: Navy is less than %s%% of the force limit
+army_size_percentage: Army is at least %s%% of the force limit
+army_size_percentage_false: Army is less than %s%% of the force limit
 owns_or_vassal_of: %s is owned by the country or a vassal
 owns_or_vassal_of_false: %s is not owned by the country or a vassal
 has_dlc: Has the DLC %s
@@ -501,3 +532,23 @@ is_neighbor_of: Is a neighbor of %s
 is_neighbor_of_false: Is not a neighbor of %s
 revolt_risk: Revolt risk of at least %s
 revolt_risk_false: Revolt risk lower than %s
+manpower_percentage: Manpower are at least %s%% of maximum
+manpower_percentage_false: Manpower are less than %s%% of maximum
+is_month: It is the %s. month of the year or later
+is_month_false: It is before the %s. month of the year
+has_owner_culture: The province has the same culture as its owner
+has_owner_culture_false: The province has a different culture than its owner
+is_overseas: The province is overseas
+is_overseas_false: The province is not overseas
+is_colony: The province is a colony
+is_colony_false: The province is not a colony
+set_papacy_active: Enables the Papacy
+set_papacy_active_false: Disables the Papacy
+manpower: Has a base manpower of at least %s
+manpower: Has a base manpower lower than %s
+heir_claim: The heir has a legitimacy of at least %s
+heir_claim_false: The heir has a legitimacy lower than %s
+has_port: Is coastal
+has_port_false: Is not coastal
+base_tax: Has a base tax of at least %s
+base_tax: Has a base tax lower than %s
