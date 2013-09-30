@@ -2,11 +2,9 @@ def main(file):
     open("output/%s" % file, 'w') #Clears out the output file
     file = structureFile(file) #Transcribes game file to more parseable format
     file = open("temp.txt", "r") #The restructured file
-    specialSection, negative, negativeNesting, printSection, n, base_chance, option = 0, 0, 0, 0, 0, 0, 0
+    specialSection, negative, negativeNesting, printSection, base_chance, option = 0, 0, 0, 0, 0, 0
     value1, value2 = "", ""
     for line in file:
-        if line == "":
-            continue #Nothing to do this iteration
         nestingCheck(line) #Determines how deeply nested the current line is
         if nesting <= 1:
             continue #Nothing relevant is nested this low
