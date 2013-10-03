@@ -1,6 +1,6 @@
-def main(file):
+def main(fileName):
     global outputText
-    parseFile = structureFile(file) #Transcribes game file to more parseable format
+    parseFile = structureFile(fileName) #Transcribes game file to more parseable format
     #parseFile = open("temp.txt", "r") #The restructured file
     specialSection, negative, negativeNesting, printSection, base_chance, option = 0, 0, 0, 0, 0, 0
     value1, value2 = "", ""
@@ -81,7 +81,7 @@ def main(file):
                         value2 = str(int(value2)/365)
                         if re.search("\.", value2):
                             value2 = value2.rstrip("0").rstrip(".")
-                        value2 = value2  + " years"
+                        value2 += " years"
             elif specialType == "religion_years" and getCommand(line) != "":
                 value1 = valueLookup(getCommand(line), specialType)[0]
                 value2 = getValue(line)
@@ -94,57 +94,56 @@ def main(file):
             specialSection = 0
             #Outputs commands that span multiple lines
             if negative == 1:
-                specialType = specialType+"_false"
+                specialType += "_false"
             if value2 != "":
                 if specialType == "spawn_rebels":
                     line = special[specialType] % (value2, value1)
                 elif specialType in special:
                     line = special[specialType] % (value1, value2)
             elif specialType in statements:
-                line = statements[specialType] % (value1)
+                line = statements[specialType] % value1
             output(line, negative+1)
             if specialType == "add_country_modifier" or specialType == "add_province_modifier" or specialType == "add_ruler_modifier":
                 getModifier(modifier) #Looks up the effects of the actual modifier
             value1 = ""
             value2 = ""
-    outputFile = open("output/%s" % file, "w", encoding="utf-8")
+    outputFile = open("output/%s" % fileName, "w", encoding="utf-8")
     outputFile.write(outputText)
     outputFile.close()
  
 #Reads in a statement file as a dictionary
-def read_statements(type):
-    statements = {}
-    with open('%s.txt' % type) as effects_file:
-        for line in effects_file.readlines():
+def readStatements(localisationName):
+    localisation = {}
+    with open('%s.txt' % localisationName) as effectsFile:
+        for line in effectsFile.readlines():
             if not ":" in line:
                 continue
             line = line.strip()
-            statement_name, format_string = line.split(':', 1)
-            statements[statement_name.strip()] = format_string.strip()
+            StatementName, formatString = line.split(':', 1)
+            localisation[StatementName.strip()] = formatString.strip()
          
-    return statements
+    return localisation
  
 #Reads in a definition file as a dictionary
-def read_definitions(name):
+def readDefinitions(name):
     definitions = {}
-    with open(path+"/localisation/%s_l_english.yml" % name, encoding="utf-8") as definitions_file:
-        lines = definitions_file.readlines()
-        language_def = lines[0].strip()
-        line_number = 1
+    with open(path+"/localisation/%s_l_english.yml" % name, encoding="utf-8") as definitionsFile:
+        lines = definitionsFile.readlines()
+        lineNumber = 1
         for line in lines[1:]:
-            if line.strip():
+            if line.strip() != "":
                 try:
                     id, value = line.split(':', 1)
-                except ValueError(e):
-                    print ("%d -> %s, e : %s" % (line_number, line, e))
+                except ValueError:
+                    print ("%d -> %s" % (lineNumber, line))
             definitions[id.strip()] = value.strip().strip('"')
-            line_number += 1
+            lineNumber += 1
    
     return definitions
  
 #Splits the file at every bracket to ensure proper parsing
 def structureFile(name):
-    output = []
+    functionOutput = []
 
     with open('%s/%s/%s' % (path, folder, name), encoding="Windows-1252") as file:
         for line in file.readlines():
@@ -156,10 +155,10 @@ def structureFile(name):
                 if "\n" in line:
                     parts = line.split("\n")
                     for p in parts:
-                        output.append(p)
+                        functionOutput.append(p)
                 else:
-                    output.append(line)
-    return output
+                    functionOutput.append(line)
+    return functionOutput
  
 #Determines the current level of nesting
 def nestingCheck(line):
@@ -179,10 +178,10 @@ def negationCheck(negative, line, negativeNesting):
     if "NOT" in line:
         negative = 1
         negativeNesting = nesting-1
-        line = re.sub("NOT[ ]*=[ ]*{", "", line)
+        line = re.sub("NOT[ ]*=[ ]*\{", "", line)
     elif negativeNesting == nesting:
         negative = 0
-    return (negative, line, negativeNesting)
+    return negative, line, negativeNesting
  
 def formatLine(line, negative):
     command = getCommand(line)
@@ -201,16 +200,16 @@ def formatLine(line, negative):
     #Special exceptions
     if valueType == "country":
         if command in exceptions["countryCommands"]:
-            command = command+"_country"
+            command += "_country"
     elif value == "capital":
         value = "the capital"
  
     #Negation
     if negative == 1 and localNegation == 0 or negative == 0 and localNegation == 1:
         if value != "":
-            command = command+"_false" #Unique lookup string for false version
+            command += "_false" #Unique lookup string for false version
         elif "any_" in command:
-            command = command+"_false"
+            command += "_false"
             negative = 0 #Contents of a "none of the following" scope don't need to be negated
    
     #Fallback code in case the lookups fail
@@ -228,7 +227,7 @@ def formatLine(line, negative):
         if not re.search("[a-zA-Z]", command):
             line = statementLookup(line, provinces, "PROV"+command, value)+":"
     line = statementLookup(line, statements, command, value)
-    return(line, negative)
+    return line, negative
  
 def getCommand(line):
     if re.search("[\w]*[ ]*=", line): #Looks for the string before the equals sign
@@ -279,7 +278,7 @@ def valueLookup(value, command):
         if folder == "events":
             if value in events:
                 return events[value], "event"
-    return(value, valueType)
+    return value, valueType
  
 #Lookup of human-readable string
 def statementLookup(line, check, command, value):
@@ -288,18 +287,18 @@ def statementLookup(line, check, command, value):
             return check[command] % value
         else:
             return check[command]
-    return(line)
+    return line
  
 #Looks up the actual effects of modifiers
 def getModifier(modifier):
     modifierFound = False
     #Rare enough that going line by line is efficient enough
     for line in modifiers:
-        if modifierFound == False:
+        if not modifierFound:
             if modifier in line:
                 modifierFound = True
             continue
-        if modifierFound == True and not "icon" in line:
+        elif not "icon" in line:
             if "}" in line:
                 break #End of modifier found
             line = formatLine(line, 0)[0]
@@ -330,7 +329,7 @@ import time #Used for timing the parser
 start = time.clock()
 import re #Needed for various string handling
 import os #Used to grab the list of files
-settings = read_statements("settings")
+settings = readStatements("settings")
 path = settings["path"].replace("\\", "/").strip()
 folder = settings["folder"]
 specificFile = settings["file"]
@@ -340,39 +339,39 @@ elif folder == "missions" or folder == "events":
     nesting, nestingIncrement = 1, 0 #One less level of irrelevant nesting
  
 #Dictionaries of known statements
-special = read_statements("statements/special")
-statements = read_statements("statements/statements")
-exceptions = read_statements("statements/exceptions")
+special = readStatements("statements/special")
+statements = readStatements("statements/statements")
+exceptions = readStatements("statements/exceptions")
  
 try:
     #Dictionaries of relevant values
-    provinces = read_definitions("prov_names")
-    countries = read_definitions("countries")
-    lookup = read_definitions("eu4")
-    lookup.update(read_definitions("text"))
-    lookup.update(read_definitions("opinions"))
-    lookup.update(read_definitions("powers_and_ideas"))
-    lookup.update(read_definitions("decisions"))
-    lookup.update(read_definitions("modifers"))
-    lookup.update(read_definitions("muslim_dlc"))
-    lookup.update(read_definitions("Purple_Phoenix"))
-    lookup.update(read_definitions("core"))
-    lookup.update(read_definitions("missions"))
-    events = read_definitions("generic_events")
-    events.update(read_definitions("flavor_events"))
-    events.update(read_definitions("EU4"))
-    events.update(read_definitions("muslim_dlc"))
-    events.update(read_definitions("Purple_Phoenix"))
+    provinces = readDefinitions("prov_names")
+    countries = readDefinitions("countries")
+    lookup = readDefinitions("eu4")
+    lookup.update(readDefinitions("text"))
+    lookup.update(readDefinitions("opinions"))
+    lookup.update(readDefinitions("powers_and_ideas"))
+    lookup.update(readDefinitions("decisions"))
+    lookup.update(readDefinitions("modifers"))
+    lookup.update(readDefinitions("muslim_dlc"))
+    lookup.update(readDefinitions("Purple_Phoenix"))
+    lookup.update(readDefinitions("core"))
+    lookup.update(readDefinitions("missions"))
+    events = readDefinitions("generic_events")
+    events.update(readDefinitions("flavor_events"))
+    events.update(readDefinitions("EU4"))
+    events.update(readDefinitions("muslim_dlc"))
+    events.update(readDefinitions("Purple_Phoenix"))
     with open(path+"/common/event_modifiers/00_event_modifiers.txt") as f:
         modifiers = f.readlines()
    
     if specificFile == "no":
-        for file in os.listdir("%s/%s" % (path, folder)):
-            print("Parsing file %s" % file)
-            main(file)
+        for fileName in os.listdir("%s/%s" % (path, folder)):
+            print("Parsing file %s" % fileName)
+            main(fileName)
     else:
-        file = specificFile+".txt"
-        main(file)
+        fileName = specificFile+".txt"
+        main(fileName)
 except FileNotFoundError:
     print("File not found error: Make sure you've set the file path in settings.txt")
 elapsed = time.clock() - start
