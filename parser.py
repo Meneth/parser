@@ -12,10 +12,10 @@ def main(fileName):
         if nesting == 2:
             if folder != "events":
                 if nestingIncrement == 1: #At these values the name is encountered
-                    name = statementLookup(line, lookup, getCommand(line)+"_title", 0) #Finds just the name identifier
+                    name = statementLookup(line, lookup, getValues(line)[0]+"_title", 0) #Finds just the name identifier
                     output(name, 2)
             elif "title" in line:
-                name = statementLookup(line, events, getValue(line), 0) #Finds just the title identifier
+                name = statementLookup(line, events, getValues(line)[1], 0) #Finds just the title identifier
                 output(name, 2)
                 if specialSection == "province_event":
                     output("Province event", -1)
@@ -46,45 +46,45 @@ def main(fileName):
                 base_chance = 1 #Tells the parser to look for the base chance
             elif "factor" in line:
                 if base_chance == 0:
-                    line = statementLookup(line, statements, "factor", getValue(line))
+                    line = statementLookup(line, statements, "factor", getValues(line)[1])
                     output(line, 1)
                 else:
-                    line = statementLookup(line, statements, "factor_base", getValue(line))
+                    line = statementLookup(line, statements, "factor_base", getValues(line)[1])
                     base_chance = 0
                     output(line, 0)
                 continue #Nothing more to do here
             elif option == 1 and "name" in line:
-                line = "Option: "+valueLookup(getValue(line), "name")[0]+":" #Shows clearly that it is an option
+                line = "Option: "+valueLookup(getValues(line)[1], "name")[0]+":" #Shows clearly that it is an option
                 output(line, 1)
                 option = 0
                 continue #Nothing more to do here
         if printSection == 0:
             continue #Nothing more to do this iteration
         #These commands span multiple lines, so they need special handling
-        if '"%s"' % getCommand(line) in exceptions["specialCommands"]:
+        if '"%s"' % getValues(line)[0] in exceptions["specialCommands"]:
             specialSection = 1
-            specialType = getCommand(line)
+            specialType = getValues(line)[0]
             continue #Nothing more to do this iteration
         elif specialSection == 1 and nestingIncrement != -1:
-            command = getCommand(line)
+            command = getValues(line)[0]
             #Assign the correct values
             if '"%s"' % command in exceptions["value1"]:
-                value1 = valueLookup(getValue(line), specialType)[0]
+                value1 = valueLookup(getValues(line)[1], specialType)[0]
                 if command == "name":
-                    modifier = getValue(line)
+                    modifier = getValues(line)[1]
             elif '"%s"' % command in exceptions["value2"]:
-                value2 = valueLookup(getValue(line), specialType)[0]
+                value2 = valueLookup(getValues(line)[1], specialType)[0]
                 if command == "duration":
                     if value2 == "-1":
                         value2 = "the rest of the campaign"
                     else: #Convert to years
                         value2 = str(int(value2)/365)
-                        if re.search("\.", value2):
+                        if "." in value2:
                             value2 = value2.rstrip("0").rstrip(".")
                         value2 += " years"
-            elif specialType == "religion_years" and getCommand(line) != "":
-                value1 = valueLookup(getCommand(line), specialType)[0]
-                value2 = getValue(line)
+            elif specialType == "religion_years" and getValues(line)[0] != "":
+                value1 = valueLookup(getValues(line)[0], specialType)[0]
+                value2 = getValues(line)[1]
             continue #Nothing more to do this iteration
         if specialSection == 0:
             line, negative = formatLine(line, negative) #Looks up the command and value, and formats the string
@@ -118,7 +118,6 @@ def readStatements(localisationName):
         for line in effectsFile.readlines():
             if not ":" in line:
                 continue
-            line = line.strip()
             StatementName, formatString = line.split(':', 1)
             localisation[StatementName.strip()] = formatString.strip()
          
@@ -131,12 +130,13 @@ def readDefinitions(name):
         lines = definitionsFile.readlines()
         lineNumber = 1
         for line in lines[1:]:
-            if line.strip() != "":
-                try:
-                    id, value = line.split(':', 1)
-                except ValueError:
-                    print ("%d -> %s" % (lineNumber, line))
-            definitions[id.strip()] = value.strip().strip('"')
+            if not ":" in line:
+                continue
+            try:
+                identifier, value = line.split(':', 1)
+                definitions[identifier.strip()] = value.strip().strip('"')
+            except ValueError:
+                print ("%d -> %s" % (lineNumber, line))
             lineNumber += 1
    
     return definitions
@@ -146,18 +146,23 @@ def structureFile(name):
     functionOutput = []
 
     with open('%s/%s/%s' % (path, folder, name), encoding="Windows-1252") as file:
-        for line in file.readlines():
-            if line.startswith("#"):
+        for line in file:
+            if "#" in line:
+                line = line.split("#")[0]
+            if line == "":
                 continue
             line = line.strip().replace("{", "{\n").replace("}", "\n}") #Splits line at brackets
-            line = re.sub("(=[ ]*[\w]*) ([\w]*[ ]*=)", "\g<1>\n\g<2>", line).strip() #Splits lines with more than one statement in two
-            if line != "":
-                if "\n" in line:
-                    parts = line.split("\n")
-                    for p in parts:
-                        functionOutput.append(p)
-                else:
-                    functionOutput.append(line)
+            if "=" in line:
+                count = line.count("=")
+                if count > 1:
+                    for values in range(count):
+                        line = re.sub("(=[\s]*[\w]*) ([\w]*[\s]*=)", "\g<1>\n\g<2>", line) #Splits lines with more than one statement in two
+            if "\n" in line:
+                parts = line.split("\n")
+                for p in parts:
+                    functionOutput.append(p)
+            else:
+                functionOutput.append(line)
     return functionOutput
  
 #Determines the current level of nesting
@@ -178,14 +183,15 @@ def negationCheck(negative, line, negativeNesting):
     if "NOT" in line:
         negative = 1
         negativeNesting = nesting-1
-        line = re.sub("NOT[ ]*=[ ]*\{", "", line)
+        line = line.lstrip("NOT =")
     elif negativeNesting == nesting:
         negative = 0
     return negative, line, negativeNesting
  
 def formatLine(line, negative):
-    command = getCommand(line)
-    value = getValue(line)
+    if line == "}" or line == "{":
+        return "", negative
+    command, value = getValues(line)
     if command in statements and "%%" in statements[command]: #Percentage values should be multiplied
         value = str(round(100*float(value), 1)).rstrip("0").rstrip(".")
    
@@ -221,34 +227,31 @@ def formatLine(line, negative):
     #Lookup of human-readable string
     if len(command) == 3 and re.match("[A-Z]{3}", command):
         line = statementLookup(line, countries, command, value)
-        line = statementLookup(line, lookup, command, value)+":"
+        return statementLookup(line, lookup, command, value)+":", negative
     elif command != "" and value == "":
         line = statementLookup(line, lookup, command, value)+":"
-        if not re.search("[a-zA-Z]", command):
+        try:
+            command = str(int(command))
             line = statementLookup(line, provinces, "PROV"+command, value)+":"
+        except ValueError:
+            pass
     line = statementLookup(line, statements, command, value)
     return line, negative
- 
-def getCommand(line):
-    if re.search("[\w]*[ ]*=", line): #Looks for the string before the equals sign
-        command = re.search("[\w]*[ ]*=", line).group(0)
-        return re.sub("[ ]*=", "", command).strip()
-    else:
-        return ""
- 
-def getValue(line):
-    if re.search("=[ ]*[-.\w]*", line): #Looks for the string after  the equals sign
-        if '"' in line: #These strings may have spaces in them
-            value = re.search('=[ ]*(".*")', line).group(1)
-        else:
-            value = re.search("=[ ]*[-.\w\"]*", line).group(0)
-        return re.sub("=[ ]*", "", value).strip('"').strip()
-    else:
-        return ""
+
+def getValues(line):
+    line = line.split("=")
+    line[0] = line[0].strip()
+    try: #Looks for the string before the equals sign
+        return line[0], line[1].strip().strip('{}"')
+    except IndexError:
+        return line[0], ""
  
 def valueLookup(value, command):
     valueType = "other"
- 
+
+    if value == "":
+        return value, valueType
+
     #Root
     if value == "ROOT" or value == "root":
         return "our country", "country"
@@ -257,37 +260,53 @@ def valueLookup(value, command):
    
     #Assign country. 3 capitalized letters in a row is a country tag
     elif len(value) == 3 and re.match("[A-Z]{3}", value):
-        if value in countries:
+        try:
             return countries[value], "country"
-        elif value in lookup: #For some reason, not all countries are in country localisation
-            return lookup[value], "country"
+        except KeyError:
+            try:
+                return lookup[value], "country"
+            except KeyError:
+                print("Could not look up country with value %s" % value)
    
     #Assign province
     if command in exceptions["provinceCommands"]: #List of statements that check provinces
-        if "PROV"+value in provinces:
+        try:
             return provinces["PROV"+value], "province"
-   
+        except KeyError:
+            try:
+                int(value)
+                print("Could not look up province with value %s" % value)
+            except ValueError:
+                pass
+
     #Attempt to look up
     if value != "" and re.match("[a-zA-Z]", value): #Numbers that aren't provinces are just regular numbers
-        if value in lookup:
+        #if value in lookup:
+        try:
             return lookup[value], "other"
-        elif "building_"+value in lookup:
-            return lookup["building_"+value], "other"
-        elif value+"_title" in lookup:
-            return lookup[value+"_title"], "other"
-        if folder == "events":
-            if value in events:
-                return events[value], "event"
+        except KeyError:
+            try:
+                return lookup["building_"+value], "other"
+            except KeyError:
+                try:
+                    return lookup[value+"_title"], "other"
+                except KeyError:
+                    if folder == "events":
+                        try:
+                            return events[value], "event"
+                        except KeyError:
+                            return value, valueType
     return value, valueType
  
 #Lookup of human-readable string
 def statementLookup(line, check, command, value):
-    if command in check:
-        if "%s" in check[command]:
-            return check[command] % value
-        else:
-            return check[command]
-    return line
+    #if command in check:
+    try:
+        return check[command] % value
+    except TypeError:
+        return check[command]
+    except (KeyError, ValueError):
+        return line
  
 #Looks up the actual effects of modifiers
 def getModifier(modifier):
@@ -304,7 +323,7 @@ def getModifier(modifier):
             line = formatLine(line, 0)[0]
             if re.match("[0-9]", line):
                 line = "+" + line
-            if line.strip() != "":
+            if line != "":
                 output(line, 0)
  
 #Output line
@@ -330,7 +349,7 @@ start = time.clock()
 import re #Needed for various string handling
 import os #Used to grab the list of files
 settings = readStatements("settings")
-path = settings["path"].replace("\\", "/").strip()
+path = settings["path"].replace("\\", "/")
 folder = settings["folder"]
 specificFile = settings["file"]
 if folder == "decisions":

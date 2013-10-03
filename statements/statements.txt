@@ -223,6 +223,7 @@ local_revolt_risk: %s revolt risk
 trade_value: %s trade value
 trade_goods_size: %s%% trade goods output
 global_prov_trade_power_modifier: %s%% provincial trade power
+land_forcelimit_modifier: %s%% land force limit
 
 BINARY STATEMENTS
 
