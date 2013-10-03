@@ -1,10 +1,11 @@
 def main(file):
-    open("output/%s" % file, 'w') #Clears out the output file
-    file = structureFile(file) #Transcribes game file to more parseable format
-    file = open("temp.txt", "r") #The restructured file
+    global outputText
+    parseFile = structureFile(file) #Transcribes game file to more parseable format
+    #parseFile = open("temp.txt", "r") #The restructured file
     specialSection, negative, negativeNesting, printSection, base_chance, option = 0, 0, 0, 0, 0, 0
     value1, value2 = "", ""
-    for line in file:
+    outputText = ""
+    for line in parseFile:
         nestingCheck(line) #Determines how deeply nested the current line is
         if nesting <= 1:
             continue #Nothing relevant is nested this low
@@ -106,6 +107,9 @@ def main(file):
                 getModifier(modifier) #Looks up the effects of the actual modifier
             value1 = ""
             value2 = ""
+    outputFile = open("output/%s" % file, "w", encoding="utf-8")
+    outputFile.write(outputText)
+    outputFile.close()
  
 #Reads in a statement file as a dictionary
 def read_statements(type):
@@ -140,15 +144,22 @@ def read_definitions(name):
  
 #Splits the file at every bracket to ensure proper parsing
 def structureFile(name):
+    output = []
+
     with open('%s/%s/%s' % (path, folder, name), encoding="Windows-1252") as file:
-        output = open("temp.txt", "w")
         for line in file.readlines():
             if line.startswith("#"):
                 continue
             line = line.strip().replace("{", "{\n").replace("}", "\n}") #Splits line at brackets
             line = re.sub("(=[ ]*[\w]*) ([\w]*[ ]*=)", "\g<1>\n\g<2>", line).strip() #Splits lines with more than one statement in two
             if line != "":
-                output.write(line+"\n")
+                if "\n" in line:
+                    parts = line.split("\n")
+                    for p in parts:
+                        output.append(p)
+                else:
+                    output.append(line)
+    return output
  
 #Determines the current level of nesting
 def nestingCheck(line):
@@ -281,7 +292,6 @@ def statementLookup(line, check, command, value):
  
 #Looks up the actual effects of modifiers
 def getModifier(modifier):
-    modifiers = open(path+"/common/event_modifiers/00_event_modifiers.txt", "r")
     modifierFound = False
     #Rare enough that going line by line is efficient enough
     for line in modifiers:
@@ -300,6 +310,7 @@ def getModifier(modifier):
  
 #Output line
 def output(line, negative):
+    global outputText
     indent = "*"*(nesting-nestingIncrement-negative-2)
     if indent != "":
         line = "%s %s" % (indent, line)
@@ -309,8 +320,7 @@ def output(line, negative):
         line = "\n'''%s'''\n" %line
     #if specificFile != "no":
         #print(line)
-    output = open("output/%s" % file, "a", encoding="utf-8")
-    output.write(line+"\n")
+    outputText += line + "\n"
  
 import cProfile, pstats
 pr = cProfile.Profile()
@@ -353,6 +363,8 @@ try:
     events.update(read_definitions("EU4"))
     events.update(read_definitions("muslim_dlc"))
     events.update(read_definitions("Purple_Phoenix"))
+    with open(path+"/common/event_modifiers/00_event_modifiers.txt") as f:
+        modifiers = f.readlines()
    
     if specificFile == "no":
         for file in os.listdir("%s/%s" % (path, folder)):
@@ -366,6 +378,6 @@ except FileNotFoundError:
 elapsed = time.clock() - start
 print("Parsing the files took %.3f seconds" %elapsed)
 pr.disable()
-sortby = 'cumulative'
+sortby = 'tottime'
 ps = pstats.Stats(pr).sort_stats(sortby)
 ps.print_stats()
