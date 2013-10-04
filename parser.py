@@ -1,11 +1,10 @@
 def main(fileName):
     global outputText
-    parseFile = structureFile(fileName) #Transcribes game file to more parseable format
-    #parseFile = open("temp.txt", "r") #The restructured file
+    inputFile = structureFile(fileName) #Transcribes game file to more parseable format
     specialSection, negative, negativeNesting, printSection, base_chance, option = 0, 0, 0, 0, 0, 0
-    value1, value2 = "", ""
+    value1, value2, modifier = "", "", ""
     outputText = ""
-    for line in parseFile:
+    for line in inputFile:
         nestingCheck(line) #Determines how deeply nested the current line is
         if nesting <= 1:
             continue #Nothing relevant is nested this low
@@ -103,13 +102,13 @@ def main(fileName):
             elif specialType in statements:
                 line = statements[specialType] % value1
             output(line, negative+1)
-            if specialType == "add_country_modifier" or specialType == "add_province_modifier" or specialType == "add_ruler_modifier":
+            if modifier != "":
                 getModifier(modifier) #Looks up the effects of the actual modifier
+                modifier = ""
             value1 = ""
             value2 = ""
-    outputFile = open("output/%s" % fileName, "w", encoding="utf-8")
-    outputFile.write(outputText)
-    outputFile.close()
+    with open("output/%s" % fileName, "w", encoding="utf-8") as outputFile:
+        outputFile.write(outputText)
  
 #Reads in a statement file as a dictionary
 def readStatements(localisationName):
@@ -134,7 +133,7 @@ def readDefinitions(name):
                 continue
             try:
                 identifier, value = line.split(':', 1)
-                definitions[identifier.strip()] = value.strip().strip('"')
+                definitions[identifier.strip()] = value.strip('" \n')
             except ValueError:
                 print ("%d -> %s" % (lineNumber, line))
             lineNumber += 1
@@ -151,7 +150,9 @@ def structureFile(name):
                 line = line.split("#")[0]
             if line == "":
                 continue
-            line = line.strip().replace("{", "{\n").replace("}", "\n}") #Splits line at brackets
+            line = line.replace("{", "{\n").replace("}", "\n}").strip() #Splits line at brackets
+            if line == "":
+                continue
             if "=" in line:
                 count = line.count("=")
                 if count > 1:
@@ -192,9 +193,12 @@ def formatLine(line, negative):
     if line == "}" or line == "{":
         return "", negative
     command, value = getValues(line)
-    if command in statements and "%%" in statements[command]: #Percentage values should be multiplied
-        value = str(round(100*float(value), 1)).rstrip("0").rstrip(".")
-   
+    try:
+        if "%%" in statements[command]: #Percentage values should be multiplied
+            value = str(round(100*float(value), 1)).rstrip("0").rstrip(".")
+    except KeyError:
+        pass
+
     #Local negation
     if value == "no":
         localNegation = 1
@@ -241,33 +245,16 @@ def formatLine(line, negative):
 def getValues(line):
     line = line.split("=")
     line[0] = line[0].strip()
-    try: #Looks for the string before the equals sign
-        return line[0], line[1].strip().strip('{}"')
+    try: #Checks if the command has a value
+        line[1] = line[1].strip().strip('{}"')
+        return line[0], line[1]
     except IndexError:
         return line[0], ""
  
 def valueLookup(value, command):
-    valueType = "other"
-
     if value == "":
-        return value, valueType
+        return value, "other"
 
-    #Root
-    if value == "ROOT" or value == "root":
-        return "our country", "country"
-    if value == "FROM" or value == "from":
-        return "our country", "country"
-   
-    #Assign country. 3 capitalized letters in a row is a country tag
-    elif len(value) == 3 and re.match("[A-Z]{3}", value):
-        try:
-            return countries[value], "country"
-        except KeyError:
-            try:
-                return lookup[value], "country"
-            except KeyError:
-                print("Could not look up country with value %s" % value)
-   
     #Assign province
     if command in exceptions["provinceCommands"]: #List of statements that check provinces
         try:
@@ -279,8 +266,23 @@ def valueLookup(value, command):
             except ValueError:
                 pass
 
-    #Attempt to look up
-    if value != "" and re.match("[a-zA-Z]", value): #Numbers that aren't provinces are just regular numbers
+    #Root
+    if value == "ROOT" or value == "root":
+        return "our country", "country"
+    if value == "FROM" or value == "from":
+        return "our country", "country"
+
+    #Assign country. 3 capitalized letters in a row is a country tag
+    if len(value) == 3 and re.match("[A-Z]{3}", value):
+        try:
+            return countries[value], "country"
+        except KeyError:
+            try:
+                return lookup[value], "country"
+            except KeyError:
+                print("Could not look up country with value %s" % value)
+
+    if value != "" and re.match("[a-zA-Z]", value): #Try to match a value with text to localisation
         #if value in lookup:
         try:
             return lookup[value], "other"
@@ -295,8 +297,8 @@ def valueLookup(value, command):
                         try:
                             return events[value], "event"
                         except KeyError:
-                            return value, valueType
-    return value, valueType
+                            return value, "other"
+    return value, "other"
  
 #Lookup of human-readable string
 def statementLookup(line, check, command, value):
@@ -325,9 +327,8 @@ def getModifier(modifier):
                 line = "+" + line
             if line != "":
                 output(line, 0)
- 
-#Output line
-def output(line, negative):
+
+def output(line, negative): #Outputs line to a temp variable. Written to output file when input file is parsed
     global outputText
     indent = "*"*(nesting-nestingIncrement-negative-2)
     if indent != "":
