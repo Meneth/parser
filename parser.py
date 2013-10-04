@@ -192,6 +192,10 @@ def negationCheck(negative, line, negativeNesting):
 def formatLine(line, negative):
     if line == "}" or line == "{":
         return "", negative
+    if "}" in line: #For some reason this occasionally won't get caught
+        line = line.strip()
+        if line == "}" or line == "{":
+            return "", negative
     command, value = getValues(line)
     try:
         if "%%" in statements[command]: #Percentage values should be multiplied
@@ -209,7 +213,7 @@ def formatLine(line, negative):
  
     #Special exceptions
     if valueType == "country":
-        if command in exceptions["countryCommands"]:
+        if '"%s"' % command in exceptions["countryCommands"]:
             command += "_country"
     elif value == "capital":
         value = "the capital"
@@ -256,7 +260,7 @@ def valueLookup(value, command):
         return value, "other"
 
     #Assign province
-    if command in exceptions["provinceCommands"]: #List of statements that check provinces
+    if '"%s"' % command in exceptions["provinceCommands"]: #List of statements that check provinces
         try:
             return provinces["PROV"+value], "province"
         except KeyError:
@@ -377,6 +381,7 @@ try:
     lookup.update(readDefinitions("Purple_Phoenix"))
     lookup.update(readDefinitions("core"))
     lookup.update(readDefinitions("missions"))
+    lookup.update(readDefinitions("diplomacy"))
     events = readDefinitions("generic_events")
     events.update(readDefinitions("flavor_events"))
     events.update(readDefinitions("EU4"))

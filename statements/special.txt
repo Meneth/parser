@@ -14,3 +14,8 @@ has_casus_belli: Has the %s casus belli against %s
 has_casus_belli_false: Does not have the %s casus belli against %s
 spawn_rebels: Spawns %s regiments of %s rebels
 add_faction_influence: Changes the influence of %s by %s
+had_country_flag: Has had the country flag "%s" for at least %s days
+had_province_flag: Has had the province flag "%s" for at least %s days
+had_global_flag: Has had the global flag "%s" for at least %s days
+define_advisor: Creates an advisor of the %s type with %s skill
+declare_war_with_cb: Declares war on %s using the %s casus belli

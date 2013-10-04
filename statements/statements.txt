@@ -26,7 +26,8 @@ AND: All of the following
 add_reform_desire: Adds %s%% reform desire
 every_neighbor_country: Every neighbor country:
 capital_scope: Capital:
-remove_country_modifier: Remove the country modifier "%s"
+remove_country_modifier: Removes the country modifier "%s"
+remove_province_modifier: Removes the country modifier "%s"
 natural_scientist: Has a Natural Scientist with a skill of at least %s
 artist: Has a Artist with a skill of at least %s
 statesman: Has a Statesman with a skill of at least %s
@@ -54,6 +55,9 @@ add_years_of_income: Modifies treasury by %s years worth of income
 add_adm_power: Changes administrative power stored by %s
 add_mil_power: Changes military power stored by %s
 add_dip_power: Changes diplomatic power stored by %s
+change_adm: Changes ruler's administrative skill by %s
+change_mil: Changes ruler's military skill by %s
+change_dip: Changes ruler's diplomatic skill by %s
 change_primary_culture: Change the primary culture to %s
 change_primary_culture_country: Change the primary culture to be same same as %s's culture
 add_stability: Changes stability by %s
@@ -74,8 +78,13 @@ add_core: Adds core on %s
 add_core_country: Gives %s core on the province
 remove_core: Removes core on %s
 any_country: Any country:
+any_country_false: No country:
 every_country: Every country:
 random_country: Random country:
+random_known_country: Random known country:
+every_known_country: Every known country:
+any_known_country: Any known country:
+no_known_country: No known country:
 every_owned_province: Every owned province:
 add_legitimacy: Adds %s legitimacy
 release: Release %s as a vassal
@@ -97,9 +106,10 @@ add_piety: Changes piety by %s%%
 change_religion: Changes religion to %s
 change_culture: Changes culture to %s
 cede_province: Cedes province to %s
-create_union: Create an union with %s
+create_union: Creates an union with %s
 type:
 any_neighbor_country: Any neighboring country:
+any_neighbor_country_false: No neighboring country:
 emperor: Holy Roman Emperor:
 inherit: Inherit %s
 factor: Multiplies value by %s:
@@ -149,10 +159,30 @@ create_advisor: Creates a %s advisor
 kill_advisor: Kills the %s advisor
 remove_advisor: Removes the %s advisor
 add_heir_claim: Changes the heir's legitimacy by %s
-change_trade_goods: Changes trade goods produced to %
+change_trade_goods: Changes trade goods produced to %s
 create_revolt: Spawns %s rebel regiments
 kill_ruler: Kills the ruler of the country
 kill_heir: Kills the heir of the country
+claim: Legitimacy of %s
+random_empty_neighbor_province: Random uncolonized bordering province:
+any_empty_neighbor_province: Any uncolonized bordering province:
+any_empty_neighbor_province_false: No uncolonized bordering province:
+create_colony: Founds a colony
+add_colonysize: Changes population of colony by %s
+controller: Province controller:
+discover_province: Discovers the %s province
+discover_country: Discovers the country %s
+add_building: Constructs the %s building
+create_marriage: Creates a royal marriage with %s
+define_heir: Spawns an heir:
+define_ruler: Spawns a ruler:
+name: Named %s
+fixed: Ruler skills are not random
+add_republican_tradition: Changes republican tradition by %s%%
+form_coalition_against: Forms a coalition against %s
+create_explorer: Creates an explorer at %s extra naval tradition
+create_conquistador: Creates a conquistador at %s extra army tradition
+white_peace: Ends any wars with %s with a white peace
 
 MODIFIERS
 
@@ -180,6 +210,9 @@ light_ship_cost: %s%% light ship cost
 heavy_ship_cost: %s%% heavy ship cost
 galley_cost: %s%% galley cost
 global_ship_cost: %s%% ship cost
+cavalry_cost: %s%% cavalry cost
+infantry_cost: %s%% infantry cost
+artillery_cost: %s%% artillery cost
 global_trade_income_modifier: %s%% global trade income
 merchants: %s merchants
 global_trade_power: %s%% trade power
@@ -204,8 +237,10 @@ spy_offence: %s%% spy offence
 global_spy_defence: %s%% spy defence
 discipline: %s%% discipline
 naval_forcelimit_modifier: %s%% naval force limit
-navy_tradition: %s yearly navy tradition
-army_tradition: %s yearly army tradition
+navy_tradition: %s navy tradition
+navy_tradition_false: Less than %s navy tradition
+army_tradition: %s army tradition
+army_tradition_false: Less than %s army tradition
 diplomatic_upkeep: %s diplomatic relations limit
 overseas_income: %s%% overseas income
 prestige_from_naval: %s%% prestige from naval battles
@@ -224,6 +259,15 @@ trade_value: %s trade value
 trade_goods_size: %s%% trade goods output
 global_prov_trade_power_modifier: %s%% provincial trade power
 land_forcelimit_modifier: %s%% land force limit
+local_missionary_strength: %s%% missionary strength
+local_colonial_growth: %s colonial growth
+reinforce_speed: %s%% reinforcement speed
+colonist_time: %s%% colonist travel time
+trade_value_modifier: %s%% trade value
+interest: %s percent interest
+heir_chance: %s%% chance of getting an heir
+local_tariffs: %s%% tariffs
+local_production_efficiency: %s%% production efficiency
 
 BINARY STATEMENTS
 
@@ -315,6 +359,8 @@ quality_ideas_false: Has less than %s Quality ideas
 quantity_ideas_false: Has less than %s Quantity ideas
 expansion_ideas_false: Has less than %s Expansion ideas
 administrative_ideas_false: Has less than %s Administrative ideas
+has_idea_group: Has the idea group %s
+has_idea_group_false: Does not have the idea group %s
 government: Has the %s government type
 government_false: Does not have the %s government type
 adm_tech: Administrative technology is at least %s
@@ -475,6 +521,8 @@ junior_union_with: Junior union partner under %s
 junior_union_with_false: Not junior union partner under %s
 senior_union_with: Senior union partner over %s
 senior_union_with_false: Not senior union partner over %s
+is_lesser_in_union: Is the lesser partner in a union
+is_lesser_in_union_false: Is not the lesser partner in a union
 has_ruler: Ruler's name is %s
 has_ruler_false: Ruler's name is not %s
 dynasty: Ruler's dynasty is %s
@@ -525,6 +573,10 @@ is_claim_country: The province is claimed by %s
 is_claim_country_false: The province is not claimed by %s
 alliance_with: Is allied with %s
 alliance_with_false: Is not allied with %s
+num_of_allies: Has at least %s allies
+num_of_allies_false: Has less than %s allies
+num_of_royal_marriages: Has at least %s royal marriages
+num_of_royal_marriages_false: Has less than %s royal marriages
 is_part_of_hre: Is part of the Holy Roman Empire
 is_part_of_hre_false: Is not part of the Holy Roman Empire
 num_of_infantry: Has at least as much infantry as %s
@@ -552,4 +604,56 @@ heir_claim_false: The heir has a legitimacy lower than %s
 has_port: Is coastal
 has_port_false: Is not coastal
 base_tax: Has a base tax of at least %s
-base_tax: Has a base tax lower than %s
+base_tax_false: Has a base tax lower than %s
+revolt_percentage: At least %s%% of provinces are in revolt
+revolt_percentage_false: Less than %s%% of provinces are in revolt
+has_siege: The province is under siege
+has_siege_false: The province is nto under siege
+has_spawned_rebels: %s rebels have spawned in the country
+has_spawned_rebels_false: %s rebels have not spawned in the country
+likely_rebels: Most likely rebel type is %s
+likely_rebels_false: Most likely rebel type is not %s
+can_spawn_rebels: Can spawn the %s rebel type
+can_spawn_rebels_false: Cannot spawn the %s rebel type
+has_empty_adjacent_province: Borders an uncolonized province
+has_empty_adjacent_province_false: Does not border an uncolonized province
+colonysize: Colony has a population of at least %s
+colonysize_false: Colony has a population lower than %s
+native_size: Native population is at least %s
+native_size_false: Native population is lower than %s
+province_id: Province is %s
+province_id: Province is not %s
+is_empty: Is uncolonized
+is_empty_false: Is colonized
+luck: Is a lucky nation
+luck_false: Is not a lucky nation
+accepted_culture: Accepts the %s culture
+accepted_culture_false: Does not accept the %s culture
+accepted_culture_country: Accepts the primary culture of %s
+accepted_culture_country_false: Does not accept the primary culture of %s
+is_bankrupt: Is bankrupt
+is_bankrupt_false: Is not bankrupt
+num_of_loans: Has at least %s active loans
+num_of_loans_false: Has less than %s active loans
+blockade: At least %s percent of the nation's provinces are blockaded
+blockade_false: Less than %s percent of the nation's provinces are blockaded
+num_of_revolts: Has at least %s active revolts
+num_of_revolts_false: Has less than %s active revolts
+papacy_active: The Papacy is enabled
+papacy_active_false: The Papacy is not enabled
+is_female: Ruler is female
+is_female_false: Ruler is male
+heir_age: Heir is at least %s years old
+heir_age_false: Heir is less than %s years old
+has_wartaxes: War taxes are active
+has_wartaxes_false: War taxes are not active
+marriage_with: Has a royal marriage with %s
+marriage_with_false: Has no royal marriage with %s
+num_of_conquistadors: Has at least %s conquistadors
+num_of_conquistadors_false: Has less than %s conquistadors
+num_of_explorers: Has at least %s explorers
+num_of_explorers_false: Has less than %s explorers
+is_in_coalition: Is in a coalition
+is_in_coalition_false: Is not in a coalition
+has_trader: Has a merchant in %s
+has_trader_false: Does not have a merchant in %s
