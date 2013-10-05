@@ -19,6 +19,9 @@ def main(fileName):
                 if specialSection == "province_event":
                     output("Province event", -1)
                     specialSection = 0
+            elif "is_triggered_only" in line:
+                output("Cannot fire randomly", -1)
+                continue
             elif "province_event" in line:  #This should be printed after the name of the event
                 specialSection = "province_event"
             elif "fire_only_once" in line:  #One of the few instances of relevant info that isn't a title on this nesting level

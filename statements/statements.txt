@@ -14,7 +14,6 @@ add_prestige: Changes prestige by %s
 set_capital: Sets capital to %s
 change_government: Changes government type to %s
 change_tag: Changes country to %s
-random_owned_province: Random owned province:
 limit: Limited to:
 add_claim: Adds claim to %s
 add_claim_country: Gives %s claims
@@ -24,7 +23,6 @@ or: Any of the following:
 and: All of the following
 AND: All of the following
 add_reform_desire: Adds %s%% reform desire
-every_neighbor_country: Every neighbor country:
 capital_scope: Capital:
 remove_country_modifier: Removes the country modifier "%s"
 remove_province_modifier: Removes the country modifier "%s"
@@ -77,15 +75,6 @@ swap_free_idea_group: Switch to new country's idea group
 add_core: Adds core on %s
 add_core_country: Gives %s core on the province
 remove_core: Removes core on %s
-any_country: Any country:
-any_country_false: No country:
-every_country: Every country:
-random_country: Random country:
-random_known_country: Random known country:
-every_known_country: Every known country:
-any_known_country: Any known country:
-no_known_country: No known country:
-every_owned_province: Every owned province:
 add_legitimacy: Adds %s legitimacy
 release: Release %s as a vassal
 add_war_exhaustion: Changes war exhaustion by %s
@@ -108,8 +97,6 @@ change_culture: Changes culture to %s
 cede_province: Cedes province to %s
 create_union: Creates an union with %s
 type:
-any_neighbor_country: Any neighboring country:
-any_neighbor_country_false: No neighboring country:
 emperor: Holy Roman Emperor:
 inherit: Inherit %s
 factor: Multiplies value by %s:
@@ -118,8 +105,6 @@ modifier:
 months: Base mean time to happen of %s months
 days: Base mean time to happen of %s days
 ai_chance: AI chance:
-all_target_province: All target provinces:
-every_target_province: Every target province:
 remove_claim: Removes claim on %s
 remove_claim_country: Removes %s's claim
 FROM: Our country:
@@ -164,9 +149,6 @@ create_revolt: Spawns %s rebel regiments
 kill_ruler: Kills the ruler of the country
 kill_heir: Kills the heir of the country
 claim: Legitimacy of %s
-random_empty_neighbor_province: Random uncolonized bordering province:
-any_empty_neighbor_province: Any uncolonized bordering province:
-any_empty_neighbor_province_false: No uncolonized bordering province:
 create_colony: Founds a colony
 add_colonysize: Changes population of colony by %s
 controller: Province controller:
@@ -181,8 +163,66 @@ fixed: Ruler skills are not random
 add_republican_tradition: Changes republican tradition by %s%%
 form_coalition_against: Forms a coalition against %s
 create_explorer: Creates an explorer at %s extra naval tradition
+create_admiral: Creates an admiral at %s extra naval tradition
 create_conquistador: Creates a conquistador at %s extra army tradition
+create_general: Creates a general at %s extra army tradition
 white_peace: Ends any wars with %s with a white peace
+add_patriarch_authority: Changes Patriarch authority by %s%%
+
+SCOPES
+
+random_target_province: Random target province:
+every_target_province: Every target province:
+any_target_province: Any target province:
+any_target_province_false: No target province:
+all_target_province: All target provinces:
+
+random_owned_province: Random owned province:
+every_owned_province: Every owned province:
+any_owned_province: Any owned province:
+any_owned_province_false: No owned province:
+all_owned_province: Every owned province:
+
+random_empty_neighbor_province: Random uncolonized bordering province:
+every_empty_neighbor_province: Every uncolonized bordering province:
+any_empty_neighbor_province: Any uncolonized bordering province:
+any_empty_neighbor_province_false: No uncolonized bordering province:
+
+random_country: Random country:
+every_country: Every country:
+any_country: Any country:
+any_country_false: No country:
+all_country: Every country:
+
+random_known_country: Random known country:
+every_known_country: Every known country:
+any_known_country: Any known country:
+any_known_country_false: No known country:
+
+random_neighbor_province: Random bordering province:
+every_neighbor_province_false: Every bordering province:
+any_neighbor_province: Any bordering province:
+any_neighbor_province_false: No bordering province:
+
+random_active_trade_node: Random active trade node:
+every_active_trade_node_false: Every active trade node:
+any_active_trade_node: Any active trade node:
+any_active_trade_node_false: No active trade node:
+
+random_neighbor_country: Random neighbor country:
+every_neighbor_country: Every neighbor country:
+any_neighbor_country: Any neighbor country:
+any_neighbor_country_false: No neighbor country:
+
+random_rival_country: Random rival country:
+every_rival_country: Every rival country:
+any_rival_country: Any rival country:
+any_rival_country_false: No rival country:
+
+random_enemy_country: Any enemy country:
+every_enemy_country: Every enemy country:
+any_enemy_country: Any enemy country:
+any_enemy_country_false: No enemy country:
 
 MODIFIERS
 
@@ -252,6 +292,8 @@ change_technology_group: Changes technology group to %s
 idea_cost: %s%% idea cost
 missionaries: %s missionaries
 war_exhaustion_cost: %s%% war exhaustion cost
+war_exhaustion: %s war exhaustion
+war_exhaustion_false: Less than %s war exhaustion
 embargo_efficiency: %s%% embargo efficiency
 local_manpower_modifier: %s%% manpower modifier
 local_revolt_risk: %s revolt risk
@@ -497,8 +539,6 @@ legitimacy: Legitimacy is at least %s
 legitimacy_false: Legitimacy is less than %s
 treasury: Has at least %s ducats in the treasury
 treasury_false: Has less than %s ducats in the treasury
-war_exhaustion: War exhaustion is at least %s
-war_exhaustion_false: War exhaustion is less than %s
 war_score: War score is at least %s
 war_score_false: War score lower than least %s
 is_monarch_leader: Ruler is leading an army
@@ -557,14 +597,6 @@ trade_goods: Produces %s
 trade_goods_false: Does not produce %s
 can_build: Can build the %s building
 can_build_false: Can't build the %s building
-any_owned_province: Any owned province:
-any_owned_province_false: No owned province:
-any_neighbor_province: Any neighbor province:
-any_neighbor_province_false: No neighbor province:
-any_known_country: Any known country:
-any_known_country_false: No known country:
-any_active_trade_node: Any active trade node:
-any_active_trade_node_false: No active trade node:
 is_rival: Considers %s a rival
 is_rival_false: Does not consider %s a rival
 is_claim: Has a claim on %s
@@ -657,3 +689,9 @@ is_in_coalition: Is in a coalition
 is_in_coalition_false: Is not in a coalition
 has_trader: Has a merchant in %s
 has_trader_false: Does not have a merchant in %s
+naval_forcelimit: Has a naval force limit of at least %s
+naval_forcelimit_false: Has a naval force limit lower than %s
+land_forcelimit: Has a land force limit of at least %s
+land_forcelimit_false: Has a land force limit lower than %s
+has_advisor: Has at least one advisor
+has_advisor_false: Has no advisors
