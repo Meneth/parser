@@ -5,7 +5,7 @@ allow: Allow:
 effect: Effect:
 success: Success:
 abort: Abort:
-chance: Aquisition chance:
+chance: Acquisition chance:
 trigger: Trigger:
 mean_time_to_happen: Mean time to happen
 immediate: Immediate effects:
@@ -20,8 +20,8 @@ add_claim_country: Gives %s claims
 add_mercantilism: Adds %s%% mercantilism
 OR: Any of the following:
 or: Any of the following:
-and: All of the following
-AND: All of the following
+and: All of the following:
+AND: All of the following:
 add_reform_desire: Adds %s%% reform desire
 capital_scope: Capital:
 remove_country_modifier: Removes the country modifier "%s"
@@ -50,6 +50,8 @@ change_province_name: Changes province name to %s
 rename_capital: Changes province capital name to %s
 add_province_manpower: Adds %s province manpower
 add_years_of_income: Modifies treasury by %s years worth of income
+add_treasury: Changes treasury by %s ducats
+add_trade_node_income: Changes treasury by %s months worth of trade income
 add_adm_power: Changes administrative power stored by %s
 add_mil_power: Changes military power stored by %s
 add_dip_power: Changes diplomatic power stored by %s
@@ -65,11 +67,11 @@ set_global_flag: Sets the global flag %s
 clr_global_flag: Removes the global flag %s
 set_province_flag: Sets the province flag %s
 clr_province_flag: Removes the province flag %s
-add_treasury: Changes treasury by %s ducats
 hidden_effect: Hidden effect:
 IF: If:
 if: If:
 country_event: Gets the country event:
+province_event: Gets the province event:
 id: ID is %s
 swap_free_idea_group: Switch to new country's idea group
 add_core: Adds core on %s
@@ -158,7 +160,15 @@ add_building: Constructs the %s building
 create_marriage: Creates a royal marriage with %s
 define_heir: Spawns an heir:
 define_ruler: Spawns a ruler:
-name: Named %s
+define_general: Creates a general:
+define_admiral: Creates an admiral:
+define_explorer: Creates an explorer:
+define_conquistador: Creates a conquistador:
+shock: %s skill in shock
+fire: %s skill in fire
+siege: %s skill in siege
+manuever: %s skill in manuever
+name: Named "%s"
 fixed: Ruler skills are not random
 add_republican_tradition: Changes republican tradition by %s%%
 form_coalition_against: Forms a coalition against %s
@@ -168,8 +178,21 @@ create_conquistador: Creates a conquistador at %s extra army tradition
 create_general: Creates a general at %s extra army tradition
 white_peace: Ends any wars with %s with a white peace
 add_patriarch_authority: Changes Patriarch authority by %s%%
+change_siege: Changes siege status by %s
+loan_size: Sets loans to %s times the nation's monthly income
+attach_leader: %s will be considered the same person as the ruler
+break_union: Breaks the union with %s
+enable_religion: Enables the %s religion
+set_dynasty: Sets dynasty to %s
+regency: As a regent
+birth_date: Born on %s
 
 SCOPES
+
+random_province: Random province in the world:
+every_province: Every province in the world:
+any_province: Any province in the world:
+any_province_false: No province in the world:
 
 random_target_province: Random target province:
 every_target_province: Every target province:
@@ -182,6 +205,11 @@ every_owned_province: Every owned province:
 any_owned_province: Any owned province:
 any_owned_province_false: No owned province:
 all_owned_province: Every owned province:
+
+random_core_province: Random core province:
+every_core_province: Every core province:
+any_core_province: Any core province:
+any_core_province_false: No core province:
 
 random_empty_neighbor_province: Random uncolonized bordering province:
 every_empty_neighbor_province: Every uncolonized bordering province:
@@ -200,14 +228,24 @@ any_known_country: Any known country:
 any_known_country_false: No known country:
 
 random_neighbor_province: Random bordering province:
-every_neighbor_province_false: Every bordering province:
+every_neighbor_province: Every bordering province:
 any_neighbor_province: Any bordering province:
 any_neighbor_province_false: No bordering province:
+
+random_trade_node_member_province: Random province owned by a trade node member:
+every_trade_node_member_province: Every province owned by a trade node member:
+any_trade_node_member_province: Any province owned by a trade node member:
+any_trade_node_member_province_false: No province owned by a trade node member:
 
 random_active_trade_node: Random active trade node:
 every_active_trade_node_false: Every active trade node:
 any_active_trade_node: Any active trade node:
 any_active_trade_node_false: No active trade node:
+
+random_trade_node_member_country: Random member of the trade node:
+every_trade_node_member_country: Every member of the trade node:
+any_trade_node_member_country: Any member of the trade node:
+any_trade_node_member_country_false: No member of the trade node:
 
 random_neighbor_country: Random neighbor country:
 every_neighbor_country: Every neighbor country:
@@ -219,10 +257,15 @@ every_rival_country: Every rival country:
 any_rival_country: Any rival country:
 any_rival_country_false: No rival country:
 
-random_enemy_country: Any enemy country:
+random_enemy_country: Random enemy country:
 every_enemy_country: Every enemy country:
 any_enemy_country: Any enemy country:
 any_enemy_country_false: No enemy country:
+
+random_core_country: Random country with provinces cored by this nation:
+every_core_country: Every country with provinces cored by this nation:
+any_core_country: Any country with provinces cored by this nation:
+any_core_country_false: No country with provinces cored by this nation:
 
 MODIFIERS
 
@@ -243,7 +286,10 @@ papal_influence: %s Papal influence per year
 core_creation: %s%% core-creation cost modifier
 build_cost: %s%% build cost modifier
 global_manpower_modifier: %s%% manpower modifier
+local_manpower: %s%% manpower modifier
+manpower_recovery_speed: %s%% manpower recovery speed
 defensiveness: %s%% fort defense modifier
+local_defensiveness: %s%% fort defense modifier
 colonist_placement_chance: %s%% colonist placement chance
 global_colonial_growth: %s%% colonial growth
 light_ship_cost: %s%% light ship cost
@@ -253,11 +299,18 @@ global_ship_cost: %s%% ship cost
 cavalry_cost: %s%% cavalry cost
 infantry_cost: %s%% infantry cost
 artillery_cost: %s%% artillery cost
+global_regiment_cost: %s%% regiment cost
+mercenary_cost: %s%% mercenary cost
+land_maintenance_modifier: %s%% land maintenance
 global_trade_income_modifier: %s%% global trade income
 merchants: %s merchants
 global_trade_power: %s%% trade power
+global_own_trade_power: %s%% domestic trade power
+global_own_trade_power: %s%% trade power abroad
+trade_steering: %s%% trade steering
 range: %s%% colonial range
 trade_range: %s%% trade range
+trade_range_modifier: %s%% trade range
 inflation_reduction: Reduces inflation by %s per year
 global_tariffs: %s%% global tariffs
 leader_naval_manuever: %s%% admiral maneuver skill
@@ -268,6 +321,7 @@ leader_fire: %s%% leader fire skill
 province_trade_power_value: %s%% provincial trade power
 local_tax_modifier: %s%% provincial tax income
 global_ship_recruit_speed: %s%% ship recruitment speed
+ship_recruit_speed: %s%% ship recruitment speed
 tolerance_heretic: %s tolerance of heretics
 tolerance_own: %s tolerance of the true faith
 tolerance_heathen: %s tolerance of heathens
@@ -310,6 +364,13 @@ interest: %s percent interest
 heir_chance: %s%% chance of getting an heir
 local_tariffs: %s%% tariffs
 local_production_efficiency: %s%% production efficiency
+prestige_from_land: %s%% prestige from land battles
+advisor_cost: %s%% advisor costs
+advisor_pool: %s%% available advisors
+prestige_decay: %s%% prestige decay
+infantry_power: %s%% infantry power
+cavalry_power: %s%% cavalry power
+artillery_power: %s%% artillery power
 
 BINARY STATEMENTS
 
@@ -349,8 +410,8 @@ technology_group: Technology group is %s
 technology_group_false: Technology group is not %s
 region: Region is %s
 region_false: Region is not %s
-is_strongest_trade_power: %s is the strongest trade power
-is_strongest_trade_power_false: %s is not the strongest trade power
+is_strongest_trade_power: The strongest trade power is %s
+is_strongest_trade_power_false: The strongest trade power is not %s
 MIL: Ruler's military skill is at least %s
 MIL_false: Ruler's military skill is less than %s
 mil: Ruler's military skill is at least %s
@@ -369,6 +430,8 @@ dip_power: Has at least %s diplomatic power
 adm_power_false: Has less than %s administrative power
 mil_power_false: Has less than %s military power
 dip_power_false: Has less than %s diplomatic power
+has_leader: Has the military leader %s
+has_leader_false: Does not have the military leader %s
 aristocracy_ideas: Has at least %s Aristocratic ideas
 plutocracy_ideas: Has at least %s Plutocratic ideas
 innovativeness_ideas: Has at least %s Innovative ideas
@@ -534,7 +597,9 @@ owns_core_province_false: Does not own core province %s
 num_of_vassals: Has at least %s vassals
 num_of_vassals_false: Has less than %s vassals
 vassal_of: A vassal of %s
-vassal_of: Not a vassal of %s
+vassal_of_false: Not a vassal of %s
+overlord_of: Has %s as a vassal
+overlord_of_false: Does not have %s as a vassal
 legitimacy: Legitimacy is at least %s
 legitimacy_false: Legitimacy is less than %s
 treasury: Has at least %s ducats in the treasury
@@ -569,6 +634,8 @@ dynasty: Ruler's dynasty is %s
 dynasty_false: Ruler's dynasty is not %s
 has_regency: Is in regency
 has_regency_false: Is not in regency
+months_of_ruling: Has ruled for at least %s months
+months_of_ruling_false: Has ruled for less than %s months
 has_heir: Has an heir
 has_heir_false: Has no heir
 is_capital: The province is the capital of the country
@@ -654,7 +721,7 @@ colonysize_false: Colony has a population lower than %s
 native_size: Native population is at least %s
 native_size_false: Native population is lower than %s
 province_id: Province is %s
-province_id: Province is not %s
+province_id_false: Province is not %s
 is_empty: Is uncolonized
 is_empty_false: Is colonized
 luck: Is a lucky nation
@@ -675,6 +742,8 @@ papacy_active: The Papacy is enabled
 papacy_active_false: The Papacy is not enabled
 is_female: Ruler is female
 is_female_false: Ruler is male
+has_female_heir: Heir is female
+has_female_heir_false: Heir is male
 heir_age: Heir is at least %s years old
 heir_age_false: Heir is less than %s years old
 has_wartaxes: War taxes are active
@@ -695,3 +764,65 @@ land_forcelimit: Has a land force limit of at least %s
 land_forcelimit_false: Has a land force limit lower than %s
 has_advisor: Has at least one advisor
 has_advisor_false: Has no advisors
+advisor_exists: The advisor with the id %s exists
+advisor_exists_false: The advisor with the id %s does not exist
+is_advisor_employed: Employs the advisor with the id %s
+is_advisor_employed_false: Does not employ the advisor with the id %s
+is_enemy: Considers %s an enemy
+is_enemy_false: Does not consider %s an enemy
+units_in_province: At least %s units are present in the province
+units_in_province_false: Less than %s units are present in the province
+heavy_ships_in_province: At least %s heavy ships in the province
+heavy_ships_in_province_false: Less than %s heavy ships in the province
+light_ships_in_province: At least %s light ships in the province
+light_ships_in_province_false: Less than %s light ships in the province
+galleys_in_province: At least %s galleys in the province
+galleys_in_province_false: Less than %s galleys in the province
+unit_in_siege: Is besieged
+unit_in_siege_false: Is not besieged
+knows_country: Has discovered %s
+knows_country_false: Has not discovered %s
+catholic: %s or more Catholic provinces compared to state religion
+protestant: %s or more Protestant provinces compared to state religion
+reformed: %s or more Reformed provinces compared to state religion
+orthodox: %s or more Orthodox provinces compared to state religion
+sunni: %s or more Sunni provinces compared to state religion
+shiite: %s or more Shiite provinces compared to state religion
+buddhism: %s or more Buddhist provinces compared to state religion
+hinduism: %s or more Hindu provinces compared to state religion
+confucianism: %s or more Confucian provinces compared to state religion
+shinto: %s or more Shinto provinces compared to state religion
+animism: %s or more Animist provinces compared to state religion
+shamanism: %s or more Shamanist provinces compared to state religion
+catholic_false: Less than %s Catholic provinces compared to state religion
+protestant_false: Less than %s Protestant provinces compared to state religion
+reformed_false: Less than %s Reformed provinces compared to state religion
+orthodox_false: Less than %s Orthodox provinces compared to state religion
+sunni_false: Less than %s Sunni provinces compared to state religion
+shiite_false: Less than %s Shiite provinces compared to state religion
+buddhism_false: Less than %s Buddhist provinces compared to state religion
+hinduism_false: Less than %s Hindu provinces compared to state religion
+confucianism_false: Less than %s Confucian provinces compared to state religion
+shinto_false: Less than %s Shinto provinces compared to state religion
+animism_false: Less than %s Animist provinces compared to state religion
+shamanism_false: Less than %s Shamanist provinces compared to state religion
+months_since_defection: Province last switched owner at least %s months ago
+months_since_defection_false: Province last switched owner less than %s months ago
+hre_size: The Holy Roman Empire has at least %s members
+hre_size_false: The Holy Roman Empire has less than %s members
+is_elector: Is an elector in the Holy Roman Empire
+is_elector_false: Is not an elector in the Holy Roman Empire
+piety: Has at least %s piety
+piety_false: Has less than %s piety
+defensive_war_with: In a defensive war against %s
+defensive_war_with_false: Not in a defensive war against %s
+num_of_generals: Has at least %s generals
+num_of_generals_false: Has less than %s generals
+num_of_admirals: Has at least %s admirals
+num_of_admirals_false: Has less than %s admirals
+army_size: Army is at least as large as %s's
+army_size_false: Army is smaller than as %s's
+navy_size: Navy is at least as large as %s's
+navy_size_false: Navy is smaller than %s's
+is_westernising: Is currently westernizing
+is_westernising: Is not currently westernizing

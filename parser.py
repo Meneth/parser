@@ -19,7 +19,7 @@ def main(fileName):
                 if specialSection == "province_event":
                     output("Province event", -1)
                     specialSection = 0
-            elif "is_triggered_only" in line:
+            if "is_triggered_only" in line:
                 output("Cannot fire randomly", -1)
                 continue
             elif "province_event" in line:  #This should be printed after the name of the event
@@ -74,15 +74,19 @@ def main(fileName):
                 value1 = valueLookup(getValues(line)[1], specialType)[0]
                 if command == "name":
                     modifier = getValues(line)[1]
+                if specialType == "trading_part":
+                    value1 =str(round(100*float(value1), 1)).rstrip("0").rstrip(".")
             elif '"%s"' % command in exceptions["value2"]:
                 value2 = valueLookup(getValues(line)[1], specialType)[0]
                 if command == "duration":
                     if value2 == "-1":
                         value2 = "the rest of the campaign"
+                    elif int(value2) <= 365: #Convert to months
+                        value2 = str(round(int(value2)/365*12))
+                        value2 += " months"
                     else: #Convert to years
-                        value2 = str(int(value2)/365)
-                        if "." in value2:
-                            value2 = value2.rstrip("0").rstrip(".")
+                        value2 = str(round(int(value2)/365, 2))
+                        value2 = value2.rstrip("0").rstrip(".")
                         value2 += " years"
             elif specialType == "religion_years" and getValues(line)[0] != "":
                 value1 = valueLookup(getValues(line)[0], specialType)[0]
@@ -98,7 +102,7 @@ def main(fileName):
             if negative == 1:
                 specialType += "_false"
             if value2 != "":
-                if specialType == "spawn_rebels":
+                if specialType == "spawn_rebels" or specialType == "has_trade_modifier" or specialType == "remove_trade_modifier":
                     line = special[specialType] % (value2, value1)
                 elif specialType in special:
                     line = special[specialType] % (value1, value2)
@@ -118,7 +122,7 @@ def readStatements(localisationName):
     localisation = {}
     with open('%s.txt' % localisationName) as effectsFile:
         for line in effectsFile.readlines():
-            if not ":" in line:
+            if not ":" in line: #Not a statement string
                 continue
             StatementName, formatString = line.split(':', 1)
             localisation[StatementName.strip()] = formatString.strip()
@@ -160,7 +164,7 @@ def structureFile(name):
                 count = line.count("=")
                 if count > 1:
                     for values in range(count):
-                        line = re.sub("(=[\s]*[\w]*) ([\w]*[\s]*=)", "\g<1>\n\g<2>", line) #Splits lines with more than one statement in two
+                        line = re.sub("(=[\s]*[\w\.]*) ([\w\.]*[\s]*=)", "\g<1>\n\g<2>", line) #Splits lines with more than one statement in two
             if "\n" in line:
                 parts = line.split("\n")
                 for p in parts:
@@ -220,7 +224,16 @@ def formatLine(line, negative):
             command += "_country"
     elif value == "capital":
         value = "the capital"
- 
+
+    #Buildings
+    try:
+        if negative == 0:
+            return special["building"] % (value, lookup["building_"+command]), negative
+        else:
+            return special["building_false"] % (value, lookup["building_"+command]), negative
+    except KeyError:
+        pass
+
     #Negation
     if negative == 1 and localNegation == 0 or negative == 0 and localNegation == 1:
         if value != "":
@@ -236,7 +249,7 @@ def formatLine(line, negative):
         line = command
  
     #Lookup of human-readable string
-    if len(command) == 3 and re.match("[A-Z]{3}", command):
+    if len(command) == 3 and re.match("[A-Z]{3}", command) and command != "AND" and command != "DIP" and command != "MIL" and command != "ADM":
         line = statementLookup(line, countries, command, value)
         return statementLookup(line, lookup, command, value)+":", negative
     elif command != "" and value == "":
@@ -325,6 +338,9 @@ def getModifier(modifier):
         if not modifierFound:
             if modifier in line:
                 modifierFound = True
+                if "}" in line:
+                    output("No effects", 0)
+                    break
             continue
         elif not "icon" in line:
             if "}" in line:
