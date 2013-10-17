@@ -154,6 +154,7 @@ claim: Legitimacy of %s
 create_colony: Founds a colony
 add_colonysize: Changes population of colony by %s
 controller: Province controller:
+change_controller: Changes province controller to %s
 discover_province: Discovers the %s province
 discover_country: Discovers the country %s
 add_building: Constructs the %s building
@@ -164,6 +165,7 @@ define_general: Creates a general:
 define_admiral: Creates an admiral:
 define_explorer: Creates an explorer:
 define_conquistador: Creates a conquistador:
+define_advisor: Creates an advisor of the %s type:
 shock: %s skill in shock
 fire: %s skill in fire
 siege: %s skill in siege
@@ -186,6 +188,25 @@ enable_religion: Enables the %s religion
 set_dynasty: Sets dynasty to %s
 regency: As a regent
 birth_date: Born on %s
+dismantle_hre: Dismantles the Holy Roman Empire
+add_imperial_influence: Changes Imperial influence by %s
+add_scaled_imperial_influence: Changes Imperial influence by %s scaled by base-tax
+random_list: One of the following will happen:
+random_list_chance: %s relative chance:
+kill_leader: Kills military leader: %s
+add_trade_modifier: Adds trade modifier:
+who: Affecting %s
+duration: Lasting %s days
+power: Changing trade power by %s
+key: Named "%s"
+location: In the province %s
+skill: With a skill level of %s
+remove_fow: Lifts the fog of war for %s months
+multiply_colonysize: Changes colony size to %s%% of current size
+change_native_ferocity: Changes ferocity of natives by %s
+change_native_hostileness: Changes hostility of natives by %s
+change_native_size: Changes number of natives by %s000
+recall_merchant: Recalls the merchant of %s from the node
 
 SCOPES
 
@@ -267,6 +288,16 @@ every_core_country: Every country with provinces cored by this nation:
 any_core_country: Any country with provinces cored by this nation:
 any_core_country_false: No country with provinces cored by this nation:
 
+random_ally: Random ally:
+every_ally: Every ally:
+any_ally: Any ally:
+any_ally_false: No ally:
+
+random_elector: Random elector:
+every_elector: Every elector:
+any_elector: Any elector:
+any_elector_false: No elector:
+
 MODIFIERS
 
 global_tax_modifier: %s%% global tax modifier
@@ -279,6 +310,7 @@ dip_tech_cost_modifier: %s%% diplomatic technology cost
 mil_tech_cost_modifier: %s%% military technology cost
 global_missionary_strength: %s%% global missionary strength
 production_efficiency: %s%% production efficiency modifier
+production_efficiency_false: Lower than %s%% production efficiency modifier
 prestige: %s prestige
 prestige_false: %s prestige
 diplomatic_reputation: %s diplomatic reputation
@@ -296,6 +328,8 @@ light_ship_cost: %s%% light ship cost
 heavy_ship_cost: %s%% heavy ship cost
 galley_cost: %s%% galley cost
 global_ship_cost: %s%% ship cost
+naval_maintenance_modifier: %s%% naval maintenance
+merc_maintenance_modifier: %s%% mercenary maintenance
 cavalry_cost: %s%% cavalry cost
 infantry_cost: %s%% infantry cost
 artillery_cost: %s%% artillery cost
@@ -306,7 +340,7 @@ global_trade_income_modifier: %s%% global trade income
 merchants: %s merchants
 global_trade_power: %s%% trade power
 global_own_trade_power: %s%% domestic trade power
-global_own_trade_power: %s%% trade power abroad
+global_foreign_trade_power: %s%% trade power abroad
 trade_steering: %s%% trade steering
 range: %s%% colonial range
 trade_range: %s%% trade range
@@ -326,6 +360,7 @@ tolerance_heretic: %s tolerance of heretics
 tolerance_own: %s tolerance of the true faith
 tolerance_heathen: %s tolerance of heathens
 religious_unity: %s%% religious unity
+religious_unity_false: Less than %s%% religious unity
 culture_group_union: Makes all cultures in the %s culture group accepted
 spy_offence: %s%% spy offence
 global_spy_defence: %s%% spy defence
@@ -340,6 +375,8 @@ overseas_income: %s%% overseas income
 prestige_from_naval: %s%% prestige from naval battles
 naval_morale: %s naval morale
 land_morale: %s army morale
+recover_army_morale_speed: %s%% army morale recovery
+recover_navy_morale_speed: %s%% navy morale recovery
 global_regiment_recruit_speed: %s%% recruitment time
 change_unit_type: Changes unit types to %s
 change_technology_group: Changes technology group to %s
@@ -371,6 +408,18 @@ prestige_decay: %s%% prestige decay
 infantry_power: %s%% infantry power
 cavalry_power: %s%% cavalry power
 artillery_power: %s%% artillery power
+heavy_ship_power: %s%% heavy ship power
+light_ship_power: %s%% light ship power
+galley_ship_power: %s%% galley power
+possible_mercenaries: %s%% available mercenaries
+garrison_growth: %s%% garrison growth
+discovered_relations_impact: %s%% relations impact from covert actions discovered
+rebel_support_efficiency: %s%% rebel support efficiency
+fabricate_claims_time: %s%% claim fabrication time
+unjustified_demands: %s%% diplomatic point cost for unjustified demands
+hostile_attrition: %s%% attrition for hostile armies
+land_attrition: %s%% attrition for own armies
+blockade_efficiency: %s%% blockade efficiency
 
 BINARY STATEMENTS
 
@@ -390,6 +439,8 @@ is_at_war: Is at war
 is_at_war_false: Is not at war
 truce_with: Has a truce with %s
 truce_with_false: Has no truce with %s
+has_truce: Has a truce with at least one country
+has_truce_false: Has no truces
 owns: Owns %s
 owns_false: Does not own %s
 is_core: Has core on %s
@@ -483,7 +534,7 @@ religion_group_false: Is not in %s's religion group
 religion_country: Follows %s's religion
 religion_group_country: Is in %s's religion group
 religion_country_false: Does not follow %s's religion
-religion_country_group_false: Is not in %s's religion group
+religion_group_country_false: Is not in %s's religion group
 has_idea: Has the idea %s
 has_idea_false: Does not have the idea %s
 overextension_percentage: Overextension is at least %s%%
@@ -588,6 +639,8 @@ num_of_heavy_ship: Has at least %s heavy ships
 num_of_light_ship: Has at least %s light ships
 num_of_heavy_ship_false: Has less than %s heavy ships
 num_of_light_ship_false: Has less than %s light ships
+num_of_galley: Has at least %s galleys
+num_of_galley_false: Has less than %s galleys
 is_religion_enabled: The %s religion is enabled
 is_religion_enabled_false: The %s religion is not enabled
 controlled_by: Controlled by %s
@@ -666,6 +719,10 @@ can_build: Can build the %s building
 can_build_false: Can't build the %s building
 is_rival: Considers %s a rival
 is_rival_false: Does not consider %s a rival
+historical_rival_with: Is a historical rival of %s
+historical_rival_with_false: Is not historical rival of %s
+historical_friend_with: Is a historical friend of %s
+historical_friend_with_false: Is not historical friend of %s
 is_claim: Has a claim on %s
 is_claim_false: Has no claim on %s
 is_claim_country: The province is claimed by %s
@@ -680,6 +737,8 @@ is_part_of_hre: Is part of the Holy Roman Empire
 is_part_of_hre_false: Is not part of the Holy Roman Empire
 num_of_infantry: Has at least as much infantry as %s
 num_of_infantry_false: Has less infantry than %s
+num_of_mercenaries: Has at least %s mercenaries
+num_of_mercenaries_false: Has less than %s mercenaries
 is_neighbor_of: Is a neighbor of %s
 is_neighbor_of_false: Is not a neighbor of %s
 revolt_risk: Revolt risk of at least %s
@@ -697,7 +756,7 @@ is_colony_false: The province is not a colony
 set_papacy_active: Enables the Papacy
 set_papacy_active_false: Disables the Papacy
 manpower: Has a base manpower of at least %s
-manpower: Has a base manpower lower than %s
+manpower_false: Has a base manpower lower than %s
 heir_claim: The heir has a legitimacy of at least %s
 heir_claim_false: The heir has a legitimacy lower than %s
 has_port: Is coastal
@@ -826,3 +885,35 @@ navy_size: Navy is at least as large as %s's
 navy_size_false: Navy is smaller than %s's
 is_westernising: Is currently westernizing
 is_westernising: Is not currently westernizing
+will_back_next_reform: Backs the next Holy Roman Empire reform
+will_back_next_reform_false: Does not back the next Holy Roman Empire reform
+set_in_empire: Adds the province to the Holy Roman Empire
+set_in_empire_false: Removes the province from the Holy Roman Empire
+at_war_with_religious_enemy: Is at war with a religious enemy
+at_war_with_religious_enemy_false: Is not at war with a religious enemy
+has_border_with_religious_enemy: Shares a border with a religious enemy
+has_border_with_religious_enemy_false: Does not share a border with a religious enemy
+has_missionary: The province is currently being converted
+has_missionary_false: The province is not currently being converted
+has_colonist: The province currently has a colonist in it
+has_colonist_false: The province does not currently have a colonist in it
+num_of_owned_provinces_with: Has at least %s provinces where all of the following is true:
+num_of_owned_provinces_with: Has less than %s provinces where all of the following is true:
+native_ferocity: Native ferocity is at least %s
+native_ferocity_false: Native ferocity is less than %s
+native_hostileness: Native hostilty is at least %s
+native_hostileness_false: Native hostilty is less than %s
+is_sea: Is a sea province
+is_sea_false: Is a land province
+num_of_cardinals: Has at least %s cardinals
+num_of_cardinals_false: Has less than %s cardinals
+allows_female_emperor: The Holy Roman Emperor can be female
+allows_female_emperor_false: The Holy Roman Emperor cannot be female
+set_allow_female_emperor: Allow women to rule the Holy Roman Empire
+set_allow_female_emperor_false: Ban women from ruling the Holy Roman Empire
+is_nomad: Is nomadic
+is_nomad_false: Is not nomadic
+is_tribal: Is a tribal nation
+is_tribal_false: Is not a tribal nation
+has_casus_belli_against: Has a casus belli against %s
+has_casus_belli_against_false: Does not have a casus belli against %s

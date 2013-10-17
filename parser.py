@@ -1,8 +1,8 @@
 def main(fileName):
     global outputText
     inputFile = structureFile(fileName) #Transcribes game file to more parseable format
-    specialSection, negative, negativeNesting, printSection, base_chance, option = 0, 0, 0, 0, 0, 0
-    value1, value2, modifier = "", "", ""
+    specialSection, negative, negativeNesting, printSection, base_chance, option, random_list, randomNesting = False, False, False, False, False, False, False, False
+    value1, value2, modifier, command, value = "", "", "", "", ""
     outputText = ""
     for line in inputFile:
         nestingCheck(line) #Determines how deeply nested the current line is
@@ -18,7 +18,7 @@ def main(fileName):
                 output(name, 2)
                 if specialSection == "province_event":
                     output("Province event", -1)
-                    specialSection = 0
+                    specialSection = False
             if "is_triggered_only" in line:
                 output("Cannot fire randomly", -1)
                 continue
@@ -27,57 +27,82 @@ def main(fileName):
             elif "fire_only_once" in line:  #One of the few instances of relevant info that isn't a title on this nesting level
                 output("Can only fire once", -1)
             elif nestingIncrement == -1: #End of relevant section
-                printSection = 0
+                printSection = False
             continue #Nothing more to do this iteration
         else:
             negative, line, negativeNesting = negationCheck(negative, line, negativeNesting)
         if folder == "decisions":
             if "potential" in line or "allow" in line or "effect" in line:
-                printSection = 1 #Only these sections are relevant
+                printSection = True #Only these sections are relevant
         elif folder == "missions":
             if "allow" in line or "success" in line or "abort" in line or "effect" in line:
                 if not "abort_effect" in line:
-                    printSection = 1 #Only these sections are relevant
+                    printSection = True #Only these sections are relevant
         elif folder == "events":
             if "trigger" in line or "mean_time_to_happen" in line or "option" in line or "immediate" in line:
-                printSection = 1 #Only these sections are relevant
+                printSection = True #Only these sections are relevant
                 if "option" in line:
-                    option = 1
+                    option = True
                     continue #This is handled by the "name" attribute instead
             elif "ai_chance" in line:
-                base_chance = 1 #Tells the parser to look for the base chance
+                base_chance = True #Tells the parser to look for the base chance
             elif "factor" in line:
-                if base_chance == 0:
+                if base_chance:
+                    line = statementLookup(line, statements, "factor_base", getValues(line)[1])
+                    base_chance = False
+                    output(line, 0)
+                else:
                     line = statementLookup(line, statements, "factor", getValues(line)[1])
                     output(line, 1)
-                else:
-                    line = statementLookup(line, statements, "factor_base", getValues(line)[1])
-                    base_chance = 0
-                    output(line, 0)
                 continue #Nothing more to do here
-            elif option == 1 and "name" in line:
+            elif option == True and "name" in line:
                 line = "Option: "+valueLookup(getValues(line)[1], "name")[0]+":" #Shows clearly that it is an option
                 output(line, 1)
-                option = 0
+                option = False
                 continue #Nothing more to do here
-        if printSection == 0:
+        if not printSection:
             continue #Nothing more to do this iteration
+        if command == "num_of_owned_provinces_with": #The line itself needs to be ignored, but the value needs to be extracted
+            if "value" in line:
+                value = getValues(line)[1]
+                if negative:
+                    output(statementLookup(line, statements, "num_of_owned_provinces_with_false", value), 1)
+                    negative = False
+                else:
+                    output(statementLookup(line, statements, "num_of_owned_provinces_with", value), 1)
+                command = ""
+            continue
+        if command == "define_advisor":
+            if "type" in line:
+                value = lookup[getValues(line)[1]]
+                output(statementLookup(line, statements, "define_advisor", value), 1)
+                command = ""
+            continue
+        command, value = getValues(line)
+        if command == "random_list": #Random lists are a bit special
+            random_list = True
+            output(statementLookup(line, statements, "random_list", ""), False)
+            randomNesting = nesting - 1 #Tells the Parser when to stop parsing as a random_list
+            continue
+        elif command == "num_of_owned_provinces_with" or command == "define_advisor":
+            continue #This is handled next iteration
+        if randomNesting == nesting:
+            random_list = False
         #These commands span multiple lines, so they need special handling
-        if '"%s"' % getValues(line)[0] in exceptions["specialCommands"]:
-            specialSection = 1
-            specialType = getValues(line)[0]
+        if '"%s"' % command in exceptions["specialCommands"]:
+            specialSection = True
+            specialType = command
             continue #Nothing more to do this iteration
-        elif specialSection == 1 and nestingIncrement != -1:
-            command = getValues(line)[0]
+        elif specialSection == True and nestingIncrement != -1:
             #Assign the correct values
             if '"%s"' % command in exceptions["value1"]:
-                value1 = valueLookup(getValues(line)[1], specialType)[0]
+                value1 = valueLookup(value, specialType)[0]
                 if command == "name":
-                    modifier = getValues(line)[1]
+                    modifier = value
                 if specialType == "trading_part":
                     value1 =str(round(100*float(value1), 1)).rstrip("0").rstrip(".")
             elif '"%s"' % command in exceptions["value2"]:
-                value2 = valueLookup(getValues(line)[1], specialType)[0]
+                value2 = valueLookup(value, specialType)[0]
                 if command == "duration":
                     if value2 == "-1":
                         value2 = "the rest of the campaign"
@@ -88,21 +113,21 @@ def main(fileName):
                         value2 = str(round(int(value2)/365, 2))
                         value2 = value2.rstrip("0").rstrip(".")
                         value2 += " years"
-            elif specialType == "religion_years" and getValues(line)[0] != "":
-                value1 = valueLookup(getValues(line)[0], specialType)[0]
-                value2 = getValues(line)[1]
+            elif specialType == "religion_years" and command != "":
+                value1 = valueLookup(command, specialType)[0]
+                value2 = value
             continue #Nothing more to do this iteration
-        if specialSection == 0:
-            line, negative = formatLine(line, negative) #Looks up the command and value, and formats the string
+        if not specialSection:
+            line, negative = formatLine(command, value, negative, random_list) #Looks up the command and value, and formats the string
             if line != "":
                 output(line, negative)
         elif nestingIncrement == -1:
-            specialSection = 0
+            specialSection = False
             #Outputs commands that span multiple lines
-            if negative == 1:
+            if negative:
                 specialType += "_false"
             if value2 != "":
-                if specialType == "spawn_rebels" or specialType == "has_trade_modifier" or specialType == "remove_trade_modifier":
+                if '"%s"' % specialType in exceptions["invertedSpecials"]:
                     line = special[specialType] % (value2, value1)
                 elif specialType in special:
                     line = special[specialType] % (value1, value2)
@@ -193,17 +218,16 @@ def negationCheck(negative, line, negativeNesting):
         negativeNesting = nesting-1
         line = line.lstrip("NOT =")
     elif negativeNesting == nesting:
-        negative = 0
+        negative = False
     return negative, line, negativeNesting
  
-def formatLine(line, negative):
-    if line == "}" or line == "{":
+def formatLine(command, value, negative, random_list):
+    if command == "{":
         return "", negative
-    if "}" in line: #For some reason this occasionally won't get caught
-        line = line.strip()
-        if line == "}" or line == "{":
+    if "}" in command: #For some reason this occasionally won't get caught
+        command = command.strip()
+        if command == "}" or command == "{":
             return "", negative
-    command, value = getValues(line)
     try:
         if "%%" in statements[command]: #Percentage values should be multiplied
             value = str(round(100*float(value), 1)).rstrip("0").rstrip(".")
@@ -212,9 +236,9 @@ def formatLine(line, negative):
 
     #Local negation
     if value == "no":
-        localNegation = 1
+        localNegation = True
     else:
-        localNegation = 0
+        localNegation = False
  
     value, valueType = valueLookup(value, command)
  
@@ -227,20 +251,20 @@ def formatLine(line, negative):
 
     #Buildings
     try:
-        if negative == 0:
-            return special["building"] % (value, lookup["building_"+command]), negative
-        else:
+        if negative:
             return special["building_false"] % (value, lookup["building_"+command]), negative
+        else:
+            return special["building"] % (value, lookup["building_"+command]), negative
     except KeyError:
         pass
 
     #Negation
-    if negative == 1 and localNegation == 0 or negative == 0 and localNegation == 1:
+    if negative == True and localNegation == False or negative == False and localNegation == True:
         if value != "":
             command += "_false" #Unique lookup string for false version
         elif "any_" in command:
             command += "_false"
-            negative = 0 #Contents of a "none of the following" scope don't need to be negated
+            negative = False #Contents of a "none of the following" scope don't need to be negated
    
     #Fallback code in case the lookups fail
     if value != "":
@@ -256,9 +280,13 @@ def formatLine(line, negative):
         line = statementLookup(line, lookup, command, value)+":"
         try:
             command = str(int(command))
-            line = statementLookup(line, provinces, "PROV"+command, value)+":"
+            if not random_list:
+                line = statementLookup(line, provinces, "PROV"+command, value)+":"
+            else:
+                line = statementLookup(line, statements, "random_list_chance", command)
         except ValueError:
             pass
+
     line = statementLookup(line, statements, command, value)
     return line, negative
 
@@ -345,7 +373,8 @@ def getModifier(modifier):
         elif not "icon" in line:
             if "}" in line:
                 break #End of modifier found
-            line = formatLine(line, 0)[0]
+            command, value = getValues(line)
+            line = formatLine(command, value, 0, False)[0]
             if re.match("[0-9]", line):
                 line = "+" + line
             if line != "":

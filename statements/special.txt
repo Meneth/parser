@@ -3,6 +3,7 @@ add_province_modifier: Adds the modifier "%s" for %s:
 add_permanent_province_modifier: Adds the modifier "%s" for %s:
 has_opinion: Has an opinion of at least %s with %s
 has_opinion_false: Has an opinion of less than %s with %s
+has_opinion_modifier: Has the opinion modifier %s with %s
 reverse_has_opinion: Has an opinion of at least %s of %s
 reverse_has_opinion_false: Has an opinion lower than %s of %s
 add_opinion: Adds the opinion modifier "%s" towards %s
@@ -20,7 +21,6 @@ add_faction_influence: Changes the influence of %s by %s
 had_country_flag: Has had the country flag "%s" for at least %s days
 had_province_flag: Has had the province flag "%s" for at least %s days
 had_global_flag: Has had the global flag "%s" for at least %s days
-define_advisor: Creates an advisor of the %s type with %s skill
 declare_war_with_cb: Declares war on %s using the %s casus belli
 trading_part: Controls at least %s%% of the %s market
 trading_part_false: Controls less than %s%% of the %s market
@@ -28,3 +28,7 @@ building: Has at least %s of the %s building
 building_false: Has less than %s of the %s building
 has_trade_modifier: %s has the "%s" trade modifier
 remove_trade_modifier: Removes %s's "%s" trade modifier
+set_variable: Sets the variable %s to %s
+change_variable: Changes the variable %s by %s
+check_variable: The variable %s is equal or higher than %s
+check_variable_false: The variable %s is lower than %s
