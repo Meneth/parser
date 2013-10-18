@@ -389,8 +389,8 @@ def output(line, negative): #Outputs line to a temp variable. Written to output 
         line = "\n=== %s ===" %line
     else:
         line = "\n'''%s'''\n" %line
-    #if specificFile != "no":
-        #print(line)
+    if specificFile != "no":
+        print(line)
     outputText += line + "\n"
  
 import cProfile, pstats

@@ -1,0 +1,1 @@
+commands: "government" "technology_group" "religion" "primary_culture" "capital"
