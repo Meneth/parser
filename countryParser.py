@@ -12,7 +12,8 @@ def main(fileName):
             continue
         value = valueLookup(value)
         output(command, value)
-    outputText = "| [[File:%s.png|32px]] " % countries[fileName[:3]] + countries[fileName[:3]]
+    #if outputDict["technology_group"] == "Eastern":
+    outputText = "| [[File:%s.png|100px|border]] " % countries[fileName[:3]] + "'''[[%s]]'''" % countries[fileName[:3]]
     for token in countryCommands:
         try:
             outputText += " || " + outputDict[token.strip('"')]

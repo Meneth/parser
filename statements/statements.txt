@@ -112,32 +112,32 @@ remove_claim_country: Removes %s's claim
 FROM: Our country:
 owner: The owner of the province:
 remove_faction: Removes the %s
-anti_tax_rebels: Spawns %s regiments of peasant rebels
-particularist_rebels: Spawns %s regiments of particularist rebels
-nationalist_rebels: Spawns %s regiments of nationalist rebels
-patriot_rebels: Spawns %s regiments of patriot rebels
-colonial_rebels: Spawns %s regiments of colonial rebels
-colonial_patriot_rebels: Spawns %s regiments of colonial patriot rebels
-revolutionary_rebels: Spawns %s regiments of revolutionary rebels
-noble_rebels: Spawns %s regiments of noble rebels
-heretic_rebels: Spawns %s regiments of heretic rebels
-pretender_rebels: Spawns %s regiments of pretender rebels
-ronin_rebels: Spawns %s regiments of Ronin rebels
-ikko_ikki_rebels: Spawns %s regiments of Ikko-Ikkis rebels
-reactionary_rebels: Spawns %s regiments of reactionary rebels
-lollard_rebels: Spawns %s regiments of Lollard rebels
-catholic_rebels: Spawns %s regiments of Catholic rebels
-protestant_rebels: Spawns %s regiments of Protestant rebels
-reformed_rebels: Spawns %s regiments of Reformed rebels
-orthodox_rebels: Spawns %s regiments of Orthodox rebels
-sunni_rebels: Spawns %s regiments of Sunni rebels
-shiite_rebels: Spawns %s regiments of Shiite rebels
-buddhism_rebels: Spawns %s regiments of Buddhist rebels
-hinduism_rebels: Spawns %s regiments of Hindu rebels
-confucianism_rebels: Spawns %s regiments of Confucian rebels
-shinto_rebels: Spawns %s regiments of Shinto rebels
-animism_rebels: Spawns %s regiments of Animist rebels
-shamanism_rebels: Spawns %s regiments of Shamanist rebels
+anti_tax_rebels: Spawns %s revolt size of peasant rebels
+particularist_rebels: Spawns %s revolt size of particularist rebels
+nationalist_rebels: Spawns %s revolt size of nationalist rebels
+patriot_rebels: Spawns %s revolt size of patriot rebels
+colonial_rebels: Spawns %s revolt size of colonial rebels
+colonial_patriot_rebels: Spawns %s revolt size of colonial patriot rebels
+revolutionary_rebels: Spawns %s revolt size of revolutionary rebels
+noble_rebels: Spawns %s revolt size of noble rebels
+heretic_rebels: Spawns %s revolt size of heretic rebels
+pretender_rebels: Spawns %s revolt size of pretender rebels
+ronin_rebels: Spawns %s revolt size of Ronin rebels
+ikko_ikki_rebels: Spawns %s revolt size of Ikko-Ikkis rebels
+reactionary_rebels: Spawns %s revolt size of reactionary rebels
+lollard_rebels: Spawns %s revolt size of Lollard rebels
+catholic_rebels: Spawns %s revolt size of Catholic rebels
+protestant_rebels: Spawns %s revolt size of Protestant rebels
+reformed_rebels: Spawns %s revolt size of Reformed rebels
+orthodox_rebels: Spawns %s revolt size of Orthodox rebels
+sunni_rebels: Spawns %s revolt size of Sunni rebels
+shiite_rebels: Spawns %s revolt size of Shiite rebels
+buddhism_rebels: Spawns %s revolt size of Buddhist rebels
+hinduism_rebels: Spawns %s revolt size of Hindu rebels
+confucianism_rebels: Spawns %s revolt size of Confucian rebels
+shinto_rebels: Spawns %s revolt size of Shinto rebels
+animism_rebels: Spawns %s revolt size of Animist rebels
+shamanism_rebels: Spawns %s revolt size of Shamanist rebels
 add_papal_influence: Changes Papal Influence by %s
 add_revolt_risk: Changes revolt risk by %s
 add_ruler_modifier: Adds the ruler modifier "%s" until the ruler's death:
@@ -147,7 +147,7 @@ kill_advisor: Kills the %s advisor
 remove_advisor: Removes the %s advisor
 add_heir_claim: Changes the heir's legitimacy by %s
 change_trade_goods: Changes trade goods produced to %s
-create_revolt: Spawns %s rebel regiments
+create_revolt: Spawns revolt of size %s
 kill_ruler: Kills the ruler of the country
 kill_heir: Kills the heir of the country
 claim: Legitimacy of %s
@@ -767,8 +767,8 @@ revolt_percentage: At least %s%% of provinces are in revolt
 revolt_percentage_false: Less than %s%% of provinces are in revolt
 has_siege: The province is under siege
 has_siege_false: The province is nto under siege
-has_spawned_rebels: %s rebels have spawned in the country
-has_spawned_rebels_false: %s rebels have not spawned in the country
+has_spawned_rebels: %s rebels have are spawned in the country
+has_spawned_rebels_false: %s rebels are not currently spawned in the country
 likely_rebels: Most likely rebel type is %s
 likely_rebels_false: Most likely rebel type is not %s
 can_spawn_rebels: Can spawn the %s rebel type
