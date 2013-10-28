@@ -22,10 +22,13 @@ OR: Any of the following:
 or: Any of the following:
 and: All of the following:
 AND: All of the following:
+tooltip: Tooltip:
+custom_tooltip:
 add_reform_desire: Adds %s%% reform desire
 capital_scope: Capital:
 remove_country_modifier: Removes the country modifier "%s"
 remove_province_modifier: Removes the country modifier "%s"
+philosopher: Has a Philosopher with a skill of at least %s
 natural_scientist: Has a Natural Scientist with a skill of at least %s
 artist: Has a Artist with a skill of at least %s
 statesman: Has a Statesman with a skill of at least %s
@@ -46,6 +49,27 @@ recruitmaster: Has a Master Recruiter with a skill of at least %s
 fortification_expert: Has a Military Engineer with a skill of at least %s
 inquisitor: Has an Inquisitor with a skill of at least %s
 grand_captain: Has a Grand Captain with a skill of at least %s
+philosopher_false: Does not have a Natural Scientist with a skill of at least %s
+natural_scientist_false: Does not have a Philosopher with a skill of at least %s
+artist_false: Does not have a Artist with a skill of at least %s
+statesman_false: Does not have a Statesman with a skill of at least %s
+treasurer_false: Does not have a Treasurer with a skill of at least %s
+naval_reformer_false: Does not have a Naval Reformer with a skill of at least %s
+army_reformer_false: Does not have an Army Reformer with a skill of at least %s
+trader_false: Does not have a Trader with a skill of at least %s
+theologian_false: Does not have a Theologian with a skill of at least %s
+spymaster_false: Does not have a Spymaster with a skill of at least %s
+colonial_governor_false: Does not have a Colonial Governor with a skill of at least %s
+diplomat_false: Does not have a Diplomat with a skill of at least %s
+master_of_mint_false: Does not have a Master of Mint with a skill of at least %s
+navigator_false: Does not have a Navigator with a skill of at least %s
+army_organiser_false: Does not have an Army Organizer with a skill of at least %s
+commandant_false: Does not have a Commandant with a skill of at least %s
+quartermaster_false: Does not have a Quartermaster with a skill of at least %s
+recruitmaster_false: Does not have a Master Recruiter with a skill of at least %s
+fortification_expert_false: Does not have a Military Engineer with a skill of at least %s
+inquisitor_false: Does not have an Inquisitor with a skill of at least %s
+grand_captain_false: Does not have a Grand Captain with a skill of at least %s
 change_province_name: Changes province name to %s
 rename_capital: Changes province capital name to %s
 add_province_manpower: Adds %s province manpower
@@ -85,11 +109,13 @@ add_navy_tradition: Changes navy tradition by %s
 cavalry: Spawns a cavalry unit in %s
 infantry: Spawns an infantry unit in %s
 heavy_ship: Spawns a heavy ship in %s
-light_ship: Spawns a heavy ship in %s
+light_ship: Spawns a light ship in %s
+galley: Spawns a galley in %s
 cavalry_country: Spawns a cavalry unit belonging to %s
 infantry_country: Spawns an infantry unit belonging to %s
 heavy_ship_country: Spawns a heavy ship belonging to %s
-light_ship_country: Spawns a heavy ship belonging to %s
+light_ship_country: Spawns a light ship belonging to %s
+galley_country: Spawns a galley belonging to %s
 add_manpower: Changes national manpower reserves by %s months worth
 add_inflation: Changes inflation by %s
 all_owned_province: All owned provinces:
@@ -104,6 +130,7 @@ inherit: Inherit %s
 factor: Multiplies value by %s:
 factor_base: Base chance of %s
 modifier:
+years: Base mean time to happen of %s years
 months: Base mean time to happen of %s months
 days: Base mean time to happen of %s days
 ai_chance: AI chance:
@@ -148,9 +175,11 @@ remove_advisor: Removes the %s advisor
 add_heir_claim: Changes the heir's legitimacy by %s
 change_trade_goods: Changes trade goods produced to %s
 create_revolt: Spawns revolt of size %s
+disband_rebels: Disbands the %s rebels in the country
 kill_ruler: Kills the ruler of the country
 kill_heir: Kills the heir of the country
 claim: Legitimacy of %s
+female: Ruler is female
 create_colony: Founds a colony
 add_colonysize: Changes population of colony by %s
 controller: Province controller:
@@ -158,6 +187,7 @@ change_controller: Changes province controller to %s
 discover_province: Discovers the %s province
 discover_country: Discovers the country %s
 add_building: Constructs the %s building
+remove_building: Removes the %s building
 create_marriage: Creates a royal marriage with %s
 define_heir: Spawns an heir:
 define_ruler: Spawns a ruler:
@@ -207,6 +237,13 @@ change_native_ferocity: Changes ferocity of natives by %s
 change_native_hostileness: Changes hostility of natives by %s
 change_native_size: Changes number of natives by %s000
 recall_merchant: Recalls the merchant of %s from the node
+set_revolution_target: %s will become the main source of the revolution
+random: Randomized by %s
+add_unit_construction: Adds unit construction of the %s type:
+amount: %s will be built
+speed: It will take %s%% of normal time
+cost: It will cost %s%% of the normal amount
+vassalize: Vassalizes %s
 
 SCOPES
 
@@ -253,13 +290,18 @@ every_neighbor_province: Every bordering province:
 any_neighbor_province: Any bordering province:
 any_neighbor_province_false: No bordering province:
 
+random_heretic_province: Random heretic province:
+every_heretic_province: Every heretic province:
+any_heretic_province: Any heretic province:
+any_heretic_province_false: No heretic province:
+
 random_trade_node_member_province: Random province owned by a trade node member:
 every_trade_node_member_province: Every province owned by a trade node member:
 any_trade_node_member_province: Any province owned by a trade node member:
 any_trade_node_member_province_false: No province owned by a trade node member:
 
 random_active_trade_node: Random active trade node:
-every_active_trade_node_false: Every active trade node:
+every_active_trade_node: Every active trade node:
 any_active_trade_node: Any active trade node:
 any_active_trade_node_false: No active trade node:
 
@@ -297,6 +339,10 @@ random_elector: Random elector:
 every_elector: Every elector:
 any_elector: Any elector:
 any_elector_false: No elector:
+
+revolution_target: The target of the revolution:
+strongest_trade_power: Strongest trade power in node:
+most_province_trade_power: Country with most provincial trade power in node:
 
 MODIFIERS
 
@@ -463,6 +509,8 @@ region: Region is %s
 region_false: Region is not %s
 is_strongest_trade_power: The strongest trade power is %s
 is_strongest_trade_power_false: The strongest trade power is not %s
+has_most_province_trade_power: The country with the most trade power is %s
+has_most_province_trade_power_false: The country with the most trade power is not %s
 MIL: Ruler's military skill is at least %s
 MIL_false: Ruler's military skill is less than %s
 mil: Ruler's military skill is at least %s
@@ -566,7 +614,7 @@ wine_false:Has less than %s provinces producing wine
 wool_false:Has less than %s provinces producing wool
 cloth_false:Has less than %s provinces producing cloth
 fish_false:Has less than %s provinces producing fish
-fur:_falseHas less than %s provinces producing fur
+fur_false:Has less than %s provinces producing fur
 salt_false:Has less than %s provinces producing salt
 naval_supplies_false:Has less than %s provinces producing naval supplies
 copper_false:Has less than %s provinces producing copper
@@ -898,7 +946,7 @@ has_missionary_false: The province is not currently being converted
 has_colonist: The province currently has a colonist in it
 has_colonist_false: The province does not currently have a colonist in it
 num_of_owned_provinces_with: Has at least %s provinces where all of the following is true:
-num_of_owned_provinces_with: Has less than %s provinces where all of the following is true:
+num_of_owned_provinces_with_false: Has less than %s provinces where all of the following is true:
 native_ferocity: Native ferocity is at least %s
 native_ferocity_false: Native ferocity is less than %s
 native_hostileness: Native hostilty is at least %s
@@ -917,3 +965,13 @@ is_tribal: Is a tribal nation
 is_tribal_false: Is not a tribal nation
 has_casus_belli_against: Has a casus belli against %s
 has_casus_belli_against_false: Does not have a casus belli against %s
+revolution_target_exists: A revolution target has been set
+revolution_target_exists_false: A revolution target has not been set
+is_revolution_target: Is the target of the revolution
+is_revolution_target_false: Is not the target of the revolution
+is_city: %s is a city
+is_city_false: %s is not a city
+is_force_converted: Was converted by force
+is_force_converted_false: Was not converted by force
+garrison: Has a garrison of at least %s
+garrison_false: Has a garrison of less than %s

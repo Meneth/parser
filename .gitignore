@@ -217,4 +217,5 @@ pip-log.txt
 #Parser specific
 temp.txt
 output/*.txt
+output/*/*.txt
 .idea

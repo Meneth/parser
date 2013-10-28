@@ -75,7 +75,13 @@ def main(fileName):
         if command == "define_advisor":
             if "type" in line:
                 value = lookup[getValues(line)[1]]
-                output(statementLookup(line, statements, "define_advisor", value), 1)
+                output(statementLookup(line, statements, command, value), 1)
+                command = ""
+            continue
+        if command == "add_unit_construction":
+            if "type" in line:
+                value = lookup[getValues(line)[1].upper()]
+                output(statementLookup(line, statements, command, value), 1)
                 command = ""
             continue
         command, value = getValues(line)
@@ -84,7 +90,7 @@ def main(fileName):
             output(statementLookup(line, statements, "random_list", ""), False)
             randomNesting = nesting - 1 #Tells the Parser when to stop parsing as a random_list
             continue
-        elif command == "num_of_owned_provinces_with" or command == "define_advisor":
+        elif command == "num_of_owned_provinces_with" or command == "define_advisor" or command == "add_unit_construction":
             continue #This is handled next iteration
         if randomNesting == nesting:
             random_list = False
@@ -430,11 +436,14 @@ try:
     lookup.update(readDefinitions("core"))
     lookup.update(readDefinitions("missions"))
     lookup.update(readDefinitions("diplomacy"))
+    lookup.update(readDefinitions("flavor_events"))
+    lookup.update(readDefinitions("USA_dlc"))
     events = readDefinitions("generic_events")
     events.update(readDefinitions("flavor_events"))
     events.update(readDefinitions("EU4"))
     events.update(readDefinitions("muslim_dlc"))
     events.update(readDefinitions("Purple_Phoenix"))
+    events.update(readDefinitions("USA_dlc"))
     with open(path+"/common/event_modifiers/00_event_modifiers.txt") as f:
         modifiers = f.readlines()
    

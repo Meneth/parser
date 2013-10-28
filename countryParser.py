@@ -1,6 +1,6 @@
 def main(fileName):
     global outputDict
-    inputFile = structureFile(fileName) #Transcribes game file to more parseable format
+    inputFile = structureFile("history/countries/"+fileName) #Transcribes game file to more parseable format
     outputDict = {}
     for line in inputFile:
         #Determines how deeply nested the current line is
@@ -18,12 +18,16 @@ def main(fileName):
             outputText += " || " + outputDict[token.strip('"')]
         except KeyError:
             outputText += " || "
+    #for trigger in ideas.values():
+    #    if "tag = %s" % fileName[:3] in trigger:
+    #        outputText += " || Unique"
+    #        break
+    #if not "Unique" in outputText:
+    #    outputText += " || "
     try:
         return outputText +"\n|-\n"
     except UnboundLocalError:
         return ""
-
-
 
 #Reads in a statement file as a dictionary
 def readStatements(localisationName):
@@ -59,7 +63,7 @@ def readDefinitions(name):
 def structureFile(name):
     functionOutput = []
 
-    with open('%s/history/countries/%s' % (path, name), encoding="Windows-1252") as file:
+    with open('%s/%s' % (path, name), encoding="Windows-1252") as file:
         for line in file:
             if "#" in line:
                 line = line.split("#")[0]
@@ -122,6 +126,19 @@ def output(command, value): #Outputs line to a temp variable. Written to output 
     global outputDict
     outputDict[command] = value
 
+#Determines the current level of nesting
+def nestingCheck(line):
+    global nesting
+    global nestingIncrement
+    nestingIncrement = 0
+    #Thanks to file restructuring, it is impossible for there to be multiple brackets on a line
+    if "{" in line:
+        nesting += 1
+        nestingIncrement = 1
+    elif "}" in line:
+        nesting -= 1
+        nestingIncrement = -1
+
 import cProfile, pstats
 pr = cProfile.Profile()
 pr.enable()
@@ -138,6 +155,21 @@ countryStatements = readStatements("statements/countryStatements")
 countryCommands = countryStatements["commands"].split()
 nesting, nestingIncrement = 0, 0
 finalOutput = ""
+#ideas = {}
+#unformattedIdeas = structureFile("common/ideas/00_country_ideas.txt")
+#triggerFound = False
+#for line in unformattedIdeas:
+#    nestingCheck(line)
+#    if triggerFound:
+#        if nesting == 1:
+#            triggerFound = False
+#        else:
+#            ideas[token].append(line)
+#    if nesting == 1 and nestingIncrement == 1:
+#        token = getValues(line)[0]
+#        ideas[token] = []
+#    elif "trigger" in line:
+#        triggerFound = True
 
 try:
     #Dictionaries of relevant values
