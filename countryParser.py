@@ -154,7 +154,7 @@ path = settings["path"].replace("\\", "/")
 countryStatements = readStatements("statements/countryStatements")
 countryCommands = countryStatements["commands"].split()
 nesting, nestingIncrement = 0, 0
-finalOutput = ""
+finalOutput = []
 #ideas = {}
 #unformattedIdeas = structureFile("common/ideas/00_country_ideas.txt")
 #triggerFound = False
@@ -190,9 +190,9 @@ try:
     lookup.update(readDefinitions("diplomacy"))
     for fileName in os.listdir("%s/history/countries" % path):
         print("Parsing file %s" % fileName)
-        finalOutput += main(fileName)
+        finalOutput.append(main(fileName))
     with open("output/countryOutput.txt", "w", encoding="utf-8") as outputFile:
-        outputFile.write(finalOutput)
+        outputFile.write("".join(finalOutput))
 except FileNotFoundError:
     print("File not found error: Make sure you've set the file path in settings.txt")
 elapsed = time.clock() - start

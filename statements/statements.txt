@@ -116,14 +116,14 @@ infantry_country: Spawns an infantry unit belonging to %s
 heavy_ship_country: Spawns a heavy ship belonging to %s
 light_ship_country: Spawns a light ship belonging to %s
 galley_country: Spawns a galley belonging to %s
-add_manpower: Changes national manpower reserves by %s months worth
+add_manpower: Changes national manpower reserves by %s years worth
 add_inflation: Changes inflation by %s
 all_owned_province: All owned provinces:
 add_piety: Changes piety by %s%%
 change_religion: Changes religion to %s
 change_culture: Changes culture to %s
 cede_province: Cedes province to %s
-create_union: Creates an union with %s
+create_union: Creates a union with %s
 type:
 emperor: Holy Roman Emperor:
 inherit: Inherit %s

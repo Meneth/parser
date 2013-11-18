@@ -3,7 +3,7 @@ def main(fileName):
     inputFile = structureFile(fileName) #Transcribes game file to more parseable format
     specialSection, negative, negativeNesting, printSection, base_chance, option, random_list, randomNesting = False, False, False, False, False, False, False, False
     value1, value2, modifier, command, value = "", "", "", "", ""
-    outputText = ""
+    outputText = []
     for line in inputFile:
         nestingCheck(line) #Determines how deeply nested the current line is
         if nesting <= 1:
@@ -146,7 +146,7 @@ def main(fileName):
             value1 = ""
             value2 = ""
     with open("output/%s" % fileName, "w", encoding="utf-8") as outputFile:
-        outputFile.write(outputText)
+        outputFile.write("".join(outputText))
  
 #Reads in a statement file as a dictionary
 def readStatements(localisationName):
@@ -397,7 +397,7 @@ def output(line, negative): #Outputs line to a temp variable. Written to output 
         line = "\n'''%s'''\n" %line
     if specificFile != "no":
         print(line)
-    outputText += line + "\n"
+    outputText.append(line + "\n")
  
 import cProfile, pstats
 pr = cProfile.Profile()
