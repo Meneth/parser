@@ -1,11 +1,11 @@
 def main(fileName):
-    global outputText
-    inputFile = structureFile(fileName) #Transcribes game file to more parseable format
+    global outputText, nestingIncrement, nesting
+    inputFile = structureFile(fileName, path, folder) #Transcribes game file to more parseable format
     specialSection, negative, negativeNesting, printSection, base_chance, option, random_list, randomNesting = False, False, False, False, False, False, False, False
     value1, value2, modifier, command, value = "", "", "", "", ""
     outputText = []
     for line in inputFile:
-        nestingCheck(line) #Determines how deeply nested the current line is
+        nesting, nestingIncrement = nestingCheck(line, nesting) #Determines how deeply nested the current line is
         if nesting <= 1:
             continue #Nothing relevant is nested this low
         if nesting == 2:
@@ -148,75 +148,6 @@ def main(fileName):
     with open("output/%s" % fileName, "w", encoding="utf-8") as outputFile:
         outputFile.write("".join(outputText))
  
-#Reads in a statement file as a dictionary
-def readStatements(localisationName):
-    localisation = {}
-    with open('%s.txt' % localisationName) as effectsFile:
-        for line in effectsFile.readlines():
-            if not ":" in line: #Not a statement string
-                continue
-            StatementName, formatString = line.split(':', 1)
-            localisation[StatementName.strip()] = formatString.strip()
-         
-    return localisation
- 
-#Reads in a definition file as a dictionary
-def readDefinitions(name):
-    definitions = {}
-    with open(path+"/localisation/%s_l_english.yml" % name, encoding="utf-8") as definitionsFile:
-        lines = definitionsFile.readlines()
-        lineNumber = 1
-        for line in lines[1:]:
-            if not ":" in line:
-                continue
-            try:
-                identifier, value = line.split(':', 1)
-                definitions[identifier.strip()] = value.strip('" \n')
-            except ValueError:
-                print ("%d -> %s" % (lineNumber, line))
-            lineNumber += 1
-   
-    return definitions
- 
-#Splits the file at every bracket to ensure proper parsing
-def structureFile(name):
-    functionOutput = []
-
-    with open('%s/%s/%s' % (path, folder, name), encoding="Windows-1252") as file:
-        for line in file:
-            if "#" in line:
-                line = line.split("#")[0]
-            if line == "":
-                continue
-            line = line.replace("{", "{\n").replace("}", "\n}").strip() #Splits line at brackets
-            if line == "":
-                continue
-            if "=" in line:
-                count = line.count("=")
-                if count > 1:
-                    for values in range(count):
-                        line = re.sub("(=[\s]*[\w\.]*) ([\w\.]*[\s]*=)", "\g<1>\n\g<2>", line) #Splits lines with more than one statement in two
-            if "\n" in line:
-                parts = line.split("\n")
-                for p in parts:
-                    functionOutput.append(p)
-            else:
-                functionOutput.append(line)
-    return functionOutput
- 
-#Determines the current level of nesting
-def nestingCheck(line):
-    global nesting
-    global nestingIncrement
-    nestingIncrement = 0
-    #Thanks to file restructuring, it is impossible for there to be multiple brackets on a line
-    if "{" in line:
-        nesting += 1
-        nestingIncrement = 1
-    elif "}" in line:
-        nesting -= 1
-        nestingIncrement = -1
- 
 def negationCheck(negative, line, negativeNesting):
     #Negation via NOT
     if "NOT" in line:
@@ -295,15 +226,6 @@ def formatLine(command, value, negative, random_list):
 
     line = statementLookup(line, statements, command, value)
     return line, negative
-
-def getValues(line):
-    line = line.split("=")
-    line[0] = line[0].strip()
-    try: #Checks if the command has a value
-        line[1] = line[1].strip().strip('{}"')
-        return line[0], line[1]
-    except IndexError:
-        return line[0], ""
  
 def valueLookup(value, command):
     if value == "":
@@ -404,6 +326,7 @@ if __name__ == "__main__":
     pr = cProfile.Profile()
     pr.enable()
 
+    from common import * #Various functions shared with the countryParser
     import time #Used for timing the parser
     start = time.clock()
     import re #Needed for various string handling
@@ -424,27 +347,27 @@ if __name__ == "__main__":
 
     try:
         #Dictionaries of relevant values
-        provinces = readDefinitions("prov_names")
-        countries = readDefinitions("countries")
-        lookup = readDefinitions("eu4")
-        lookup.update(readDefinitions("text"))
-        lookup.update(readDefinitions("opinions"))
-        lookup.update(readDefinitions("powers_and_ideas"))
-        lookup.update(readDefinitions("decisions"))
-        lookup.update(readDefinitions("modifers"))
-        lookup.update(readDefinitions("muslim_dlc"))
-        lookup.update(readDefinitions("Purple_Phoenix"))
-        lookup.update(readDefinitions("core"))
-        lookup.update(readDefinitions("missions"))
-        lookup.update(readDefinitions("diplomacy"))
-        lookup.update(readDefinitions("flavor_events"))
-        lookup.update(readDefinitions("USA_dlc"))
-        events = readDefinitions("generic_events")
-        events.update(readDefinitions("flavor_events"))
-        events.update(readDefinitions("EU4"))
-        events.update(readDefinitions("muslim_dlc"))
-        events.update(readDefinitions("Purple_Phoenix"))
-        events.update(readDefinitions("USA_dlc"))
+        provinces = readDefinitions("prov_names", path)
+        countries = readDefinitions("countries", path)
+        lookup = readDefinitions("eu4", path)
+        lookup.update(readDefinitions("text", path))
+        lookup.update(readDefinitions("opinions", path))
+        lookup.update(readDefinitions("powers_and_ideas", path))
+        lookup.update(readDefinitions("decisions", path))
+        lookup.update(readDefinitions("modifers", path))
+        lookup.update(readDefinitions("muslim_dlc", path))
+        lookup.update(readDefinitions("Purple_Phoenix", path))
+        lookup.update(readDefinitions("core", path))
+        lookup.update(readDefinitions("missions", path))
+        lookup.update(readDefinitions("diplomacy", path))
+        lookup.update(readDefinitions("flavor_events", path))
+        lookup.update(readDefinitions("USA_dlc", path))
+        events = readDefinitions("generic_events", path)
+        events.update(readDefinitions("flavor_events", path))
+        events.update(readDefinitions("EU4", path))
+        events.update(readDefinitions("muslim_dlc", path))
+        events.update(readDefinitions("Purple_Phoenix", path))
+        events.update(readDefinitions("USA_dlc", path))
         with open(path+"/common/event_modifiers/00_event_modifiers.txt") as f:
             modifiers = f.readlines()
 
