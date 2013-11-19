@@ -55,7 +55,7 @@ def main(fileName):
                     line = statementLookup(line, statements, "factor", getValues(line)[1])
                     output(line, 1)
                 continue #Nothing more to do here
-            elif option == True and "name" in line:
+            elif option and "name" in line:
                 line = "Option: "+valueLookup(getValues(line)[1], "name")[0]+":" #Shows clearly that it is an option
                 output(line, 1)
                 option = False
@@ -90,7 +90,7 @@ def main(fileName):
             output(statementLookup(line, statements, "random_list", ""), False)
             randomNesting = nesting - 1 #Tells the Parser when to stop parsing as a random_list
             continue
-        elif command == "num_of_owned_provinces_with" or command == "define_advisor" or command == "add_unit_construction":
+        elif command in ["num_of_owned_provinces_with", "define_advisor", "add_unit_construction"]:
             continue #This is handled next iteration
         if randomNesting == nesting:
             random_list = False
@@ -99,7 +99,7 @@ def main(fileName):
             specialSection = True
             specialType = command
             continue #Nothing more to do this iteration
-        elif specialSection == True and nestingIncrement != -1:
+        elif specialSection and nestingIncrement != -1:
             #Assign the correct values
             if '"%s"' % command in exceptions["value1"]:
                 value1 = valueLookup(value, specialType)[0]
@@ -196,7 +196,7 @@ def formatLine(command, value, negative, random_list):
         pass
 
     #Negation
-    if negative == True and localNegation == False or negative == False and localNegation == True:
+    if negative and not localNegation or not negative and localNegation:
         if value != "":
             command += "_false" #Unique lookup string for false version
         elif "any_" in command:
@@ -243,9 +243,9 @@ def valueLookup(value, command):
                 pass
 
     #Root
-    if value == "ROOT" or value == "root":
+    if value.lower() == "root":
         return "our country", "country"
-    if value == "FROM" or value == "from":
+    if value.lower() == "from":
         return "our country", "country"
 
     #Assign country. 3 capitalized letters in a row is a country tag
