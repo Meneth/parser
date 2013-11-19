@@ -398,67 +398,68 @@ def output(line, negative): #Outputs line to a temp variable. Written to output 
     if specificFile != "no":
         print(line)
     outputText.append(line + "\n")
- 
-import cProfile, pstats
-pr = cProfile.Profile()
-pr.enable()
- 
-import time #Used for timing the parser
-start = time.clock()
-import re #Needed for various string handling
-import os #Used to grab the list of files
-settings = readStatements("settings")
-path = settings["path"].replace("\\", "/")
-folder = settings["folder"]
-specificFile = settings["file"]
-if folder == "decisions":
-    nesting, nestingIncrement = 0, 0
-elif folder == "missions" or folder == "events":
-    nesting, nestingIncrement = 1, 0 #One less level of irrelevant nesting
- 
-#Dictionaries of known statements
-special = readStatements("statements/special")
-statements = readStatements("statements/statements")
-exceptions = readStatements("statements/exceptions")
- 
-try:
-    #Dictionaries of relevant values
-    provinces = readDefinitions("prov_names")
-    countries = readDefinitions("countries")
-    lookup = readDefinitions("eu4")
-    lookup.update(readDefinitions("text"))
-    lookup.update(readDefinitions("opinions"))
-    lookup.update(readDefinitions("powers_and_ideas"))
-    lookup.update(readDefinitions("decisions"))
-    lookup.update(readDefinitions("modifers"))
-    lookup.update(readDefinitions("muslim_dlc"))
-    lookup.update(readDefinitions("Purple_Phoenix"))
-    lookup.update(readDefinitions("core"))
-    lookup.update(readDefinitions("missions"))
-    lookup.update(readDefinitions("diplomacy"))
-    lookup.update(readDefinitions("flavor_events"))
-    lookup.update(readDefinitions("USA_dlc"))
-    events = readDefinitions("generic_events")
-    events.update(readDefinitions("flavor_events"))
-    events.update(readDefinitions("EU4"))
-    events.update(readDefinitions("muslim_dlc"))
-    events.update(readDefinitions("Purple_Phoenix"))
-    events.update(readDefinitions("USA_dlc"))
-    with open(path+"/common/event_modifiers/00_event_modifiers.txt") as f:
-        modifiers = f.readlines()
-   
-    if specificFile == "no":
-        for fileName in os.listdir("%s/%s" % (path, folder)):
-            print("Parsing file %s" % fileName)
+
+if __name__ == "__main__":
+    import cProfile, pstats
+    pr = cProfile.Profile()
+    pr.enable()
+
+    import time #Used for timing the parser
+    start = time.clock()
+    import re #Needed for various string handling
+    import os #Used to grab the list of files
+    settings = readStatements("settings")
+    path = settings["path"].replace("\\", "/")
+    folder = settings["folder"]
+    specificFile = settings["file"]
+    if folder == "decisions":
+        nesting, nestingIncrement = 0, 0
+    elif folder == "missions" or folder == "events":
+        nesting, nestingIncrement = 1, 0 #One less level of irrelevant nesting
+
+    #Dictionaries of known statements
+    special = readStatements("statements/special")
+    statements = readStatements("statements/statements")
+    exceptions = readStatements("statements/exceptions")
+
+    try:
+        #Dictionaries of relevant values
+        provinces = readDefinitions("prov_names")
+        countries = readDefinitions("countries")
+        lookup = readDefinitions("eu4")
+        lookup.update(readDefinitions("text"))
+        lookup.update(readDefinitions("opinions"))
+        lookup.update(readDefinitions("powers_and_ideas"))
+        lookup.update(readDefinitions("decisions"))
+        lookup.update(readDefinitions("modifers"))
+        lookup.update(readDefinitions("muslim_dlc"))
+        lookup.update(readDefinitions("Purple_Phoenix"))
+        lookup.update(readDefinitions("core"))
+        lookup.update(readDefinitions("missions"))
+        lookup.update(readDefinitions("diplomacy"))
+        lookup.update(readDefinitions("flavor_events"))
+        lookup.update(readDefinitions("USA_dlc"))
+        events = readDefinitions("generic_events")
+        events.update(readDefinitions("flavor_events"))
+        events.update(readDefinitions("EU4"))
+        events.update(readDefinitions("muslim_dlc"))
+        events.update(readDefinitions("Purple_Phoenix"))
+        events.update(readDefinitions("USA_dlc"))
+        with open(path+"/common/event_modifiers/00_event_modifiers.txt") as f:
+            modifiers = f.readlines()
+
+        if specificFile == "no":
+            for fileName in os.listdir("%s/%s" % (path, folder)):
+                print("Parsing file %s" % fileName)
+                main(fileName)
+        else:
+            fileName = specificFile+".txt"
             main(fileName)
-    else:
-        fileName = specificFile+".txt"
-        main(fileName)
-except FileNotFoundError:
-    print("File not found error: Make sure you've set the file path in settings.txt")
-elapsed = time.clock() - start
-print("Parsing the files took %.3f seconds" %elapsed)
-pr.disable()
-sortby = 'tottime'
-ps = pstats.Stats(pr).sort_stats(sortby)
-ps.print_stats()
+    except FileNotFoundError:
+        print("File not found error: Make sure you've set the file path in settings.txt")
+    elapsed = time.clock() - start
+    print("Parsing the files took %.3f seconds" %elapsed)
+    pr.disable()
+    sortby = 'tottime'
+    ps = pstats.Stats(pr).sort_stats(sortby)
+    ps.print_stats()

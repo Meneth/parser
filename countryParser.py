@@ -139,65 +139,66 @@ def nestingCheck(line):
         nesting -= 1
         nestingIncrement = -1
 
-import cProfile, pstats
-pr = cProfile.Profile()
-pr.enable()
+if __name__ == "__main__":
+    import cProfile, pstats
+    pr = cProfile.Profile()
+    pr.enable()
 
-import time #Used for timing the parser
-start = time.clock()
-import re #Needed for various string handling
-import os #Used to grab the list of files
-settings = readStatements("settings")
-path = settings["path"].replace("\\", "/")
+    import time #Used for timing the parser
+    start = time.clock()
+    import re #Needed for various string handling
+    import os #Used to grab the list of files
+    settings = readStatements("settings")
+    path = settings["path"].replace("\\", "/")
 
-#Dictionaries of known statements
-countryStatements = readStatements("statements/countryStatements")
-countryCommands = countryStatements["commands"].split()
-nesting, nestingIncrement = 0, 0
-finalOutput = []
-#ideas = {}
-#unformattedIdeas = structureFile("common/ideas/00_country_ideas.txt")
-#triggerFound = False
-#for line in unformattedIdeas:
-#    nestingCheck(line)
-#    if triggerFound:
-#        if nesting == 1:
-#            triggerFound = False
-#        else:
-#            ideas[token].append(line)
-#    if nesting == 1 and nestingIncrement == 1:
-#        token = getValues(line)[0]
-#        ideas[token] = []
-#    elif "trigger" in line:
-#        triggerFound = True
+    #Dictionaries of known statements
+    countryStatements = readStatements("statements/countryStatements")
+    countryCommands = countryStatements["commands"].split()
+    nesting, nestingIncrement = 0, 0
+    finalOutput = []
+    #ideas = {}
+    #unformattedIdeas = structureFile("common/ideas/00_country_ideas.txt")
+    #triggerFound = False
+    #for line in unformattedIdeas:
+    #    nestingCheck(line)
+    #    if triggerFound:
+    #        if nesting == 1:
+    #            triggerFound = False
+    #        else:
+    #            ideas[token].append(line)
+    #    if nesting == 1 and nestingIncrement == 1:
+    #        token = getValues(line)[0]
+    #        ideas[token] = []
+    #    elif "trigger" in line:
+    #        triggerFound = True
 
-try:
-    #Dictionaries of relevant values
-    provinces = readDefinitions("prov_names")
-    countries = readDefinitions("countries")
-    countries.update(readDefinitions("text"))
-    countries.update(readDefinitions("eu4"))
-    lookup = readDefinitions("eu4")
-    lookup.update(readDefinitions("text"))
-    lookup.update(readDefinitions("opinions"))
-    lookup.update(readDefinitions("powers_and_ideas"))
-    lookup.update(readDefinitions("decisions"))
-    lookup.update(readDefinitions("modifers"))
-    lookup.update(readDefinitions("muslim_dlc"))
-    lookup.update(readDefinitions("Purple_Phoenix"))
-    lookup.update(readDefinitions("core"))
-    lookup.update(readDefinitions("missions"))
-    lookup.update(readDefinitions("diplomacy"))
-    for fileName in os.listdir("%s/history/countries" % path):
-        print("Parsing file %s" % fileName)
-        finalOutput.append(main(fileName))
-    with open("output/countryOutput.txt", "w", encoding="utf-8") as outputFile:
-        outputFile.write("".join(finalOutput))
-except FileNotFoundError:
-    print("File not found error: Make sure you've set the file path in settings.txt")
-elapsed = time.clock() - start
-print("Parsing the files took %.3f seconds" %elapsed)
-pr.disable()
-sortby = 'tottime'
-ps = pstats.Stats(pr).sort_stats(sortby)
-ps.print_stats()
+    try:
+        #Dictionaries of relevant values
+        provinces = readDefinitions("prov_names")
+        countries = readDefinitions("countries")
+        countries.update(readDefinitions("text"))
+        countries.update(readDefinitions("eu4"))
+        lookup = readDefinitions("eu4")
+        lookup.update(readDefinitions("text"))
+        lookup.update(readDefinitions("opinions"))
+        lookup.update(readDefinitions("powers_and_ideas"))
+        lookup.update(readDefinitions("decisions"))
+        lookup.update(readDefinitions("modifers"))
+        lookup.update(readDefinitions("muslim_dlc"))
+        lookup.update(readDefinitions("Purple_Phoenix"))
+        lookup.update(readDefinitions("core"))
+        lookup.update(readDefinitions("missions"))
+        lookup.update(readDefinitions("diplomacy"))
+        for fileName in os.listdir("%s/history/countries" % path):
+            print("Parsing file %s" % fileName)
+            finalOutput.append(main(fileName))
+        with open("output/countryOutput.txt", "w", encoding="utf-8") as outputFile:
+            outputFile.write("".join(finalOutput))
+    except FileNotFoundError:
+        print("File not found error: Make sure you've set the file path in settings.txt")
+    elapsed = time.clock() - start
+    print("Parsing the files took %.3f seconds" %elapsed)
+    pr.disable()
+    sortby = 'tottime'
+    ps = pstats.Stats(pr).sort_stats(sortby)
+    ps.print_stats()
