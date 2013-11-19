@@ -32,14 +32,14 @@ def main(fileName):
         else:
             negative, line, negativeNesting = negationCheck(negative, line, negativeNesting)
         if folder == "decisions":
-            if "potential" in line or "allow" in line or "effect" in line:
+            if any(x in line for x in ["potential", "allow", "effect"]):
                 printSection = True #Only these sections are relevant
         elif folder == "missions":
-            if "allow" in line or "success" in line or "abort" in line or "effect" in line:
+            if any(x in line for x in ["allow", "success", "abort", "effect"]):
                 if not "abort_effect" in line:
                     printSection = True #Only these sections are relevant
         elif folder == "events":
-            if "trigger" in line or "mean_time_to_happen" in line or "option" in line or "immediate" in line:
+            if any(x in line for x in ["trigger", "mean_time_to_happen", "option", "immediate"]):
                 printSection = True #Only these sections are relevant
                 if "option" in line:
                     option = True
