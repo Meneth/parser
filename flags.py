@@ -4,7 +4,7 @@ def main(fileName):
     #print(inputFile)
     for line in inputFile:
         if line[:2] == "d_" or line[:2] == "c_" or line[:2] == "k_" or line[:2] == "e_":
-            titles.append(getValues(line)[0])
+            titles.append(getValues(line)[0].lower())
 
 from common import *
 import os
@@ -14,7 +14,7 @@ path = settings["path"].replace("\\", "/")
 
 flags = []
 for fileName in os.listdir("%s\gfx\\flags" % (path)):
-    flags.append(fileName)
+    flags.append(fileName.lower())
 
 titles = []
 for fileName in os.listdir("%s\common\landed_titles" % (path)):
