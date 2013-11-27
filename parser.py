@@ -172,7 +172,7 @@ def formatLine(command, value, negative, random_list):
         pass
 
     #Local negation
-    if value == "no":
+    if value == "no" or value == "false":
         localNegation = True
     else:
         localNegation = False

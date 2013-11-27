@@ -32,7 +32,7 @@ def readDefinitions(name, path):
 def structureFile(name, path, folder):
     functionOutput = []
 
-    with open('%s/%s/%s' % (path, folder, name), encoding="Windows-1252") as file:
+    with open('%s/%s/%s' % (path, folder, name), encoding="Windows-1252", errors="replace") as file:
         for line in file:
             if "#" in line:
                 line = line.split("#")[0]
