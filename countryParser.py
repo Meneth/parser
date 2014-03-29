@@ -88,6 +88,7 @@ if __name__ == "__main__":
         countries.update(readDefinitions("text", path))
         countries.update(readDefinitions("EU4", path))
         lookup = readDefinitions("EU4", path)
+        lookup.update(readDefinitions("nw", path))
         lookup.update(readDefinitions("text", path))
         lookup.update(readDefinitions("opinions", path))
         lookup.update(readDefinitions("powers_and_ideas", path))
