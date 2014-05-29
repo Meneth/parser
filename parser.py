@@ -11,7 +11,10 @@ def main(fileName):
         if nesting == 2:
             if folder != "events":
                 if nestingIncrement == 1: #At these values the name is encountered
-                    name = statementLookup(line, lookup, getValues(line)[0]+"_title", 0) #Finds just the name identifier
+                    if folder != "common\policies":
+                        name = statementLookup(line, lookup, getValues(line)[0]+"_title", 0) #Finds just the name identifier
+                    else:
+                        name = statementLookup(line, lookup, getValues(line)[0], 0) #Finds just the name identifier
                     output(name, 2)
             elif "title" in line:
                 name = statementLookup(line, events, getValues(line)[1], 0) #Finds just the title identifier
@@ -28,12 +31,20 @@ def main(fileName):
                 output("Can only fire once", -1)
             elif nestingIncrement == -1: #End of relevant section
                 printSection = False
+            elif folder == "common\policies" and not "ai_will_do" in line and nestingIncrement == 0:
+                line = formatLine(getValues(line)[0], getValues(line)[1], 0, False)[0]
+                if re.match("[0-9]", line):
+                    line = "+" + line
+                output(line, -1)
             continue #Nothing more to do this iteration
         else:
             negative, line, negativeNesting = negationCheck(negative, line, negativeNesting)
         if folder == "decisions":
             if any(x in line for x in ["potential", "allow", "effect"]):
                 printSection = True #Only these sections are relevant
+        elif folder == "common\policies":
+            if any(x in line for x in ["potential", "allow"]):
+                printSection = True
         elif folder == "missions":
             if any(x in line for x in ["allow", "success", "abort", "effect"]):
                 if not "abort_effect" in line:
@@ -170,6 +181,8 @@ def formatLine(command, value, negative, random_list):
             value = str(round(100*float(value), 1)).rstrip("0").rstrip(".")
     except KeyError:
         pass
+    except ValueError:
+        pass
 
     #Local negation
     if value == "no" or value == "false":
@@ -247,6 +260,12 @@ def valueLookup(value, command):
         return "our country", "country"
     if value.lower() == "from":
         return "our country", "country"
+    if value.lower() == "adm":
+        return "administrative", "other"
+    if value.lower() == "mil":
+        return "military", "other"
+    if value.lower() == "dip":
+        return "diplomatic", "other"
 
     #Assign country. 3 capitalized letters in a row is a country tag
     if len(value) == 3 and re.match("[A-Z]{3}", value):
@@ -337,7 +356,7 @@ if __name__ == "__main__":
     specificFile = settings["file"]
     if folder == "decisions":
         nesting, nestingIncrement = 0, 0
-    elif folder == "missions" or folder == "events":
+    elif folder == "missions" or folder == "events" or folder == "common\policies":
         nesting, nestingIncrement = 1, 0 #One less level of irrelevant nesting
 
     #Dictionaries of known statements
@@ -362,6 +381,7 @@ if __name__ == "__main__":
         lookup.update(readDefinitions("diplomacy", path))
         lookup.update(readDefinitions("flavor_events", path))
         lookup.update(readDefinitions("USA_dlc", path))
+        lookup.update(readDefinitions("nw2", path))
         events = readDefinitions("generic_events", path)
         events.update(readDefinitions("flavor_events", path))
         events.update(readDefinitions("EU4", path))

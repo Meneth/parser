@@ -72,7 +72,8 @@ inquisitor_false: Does not have an Inquisitor with a skill of at least %s
 grand_captain_false: Does not have a Grand Captain with a skill of at least %s
 change_province_name: Changes province name to %s
 rename_capital: Changes province capital name to %s
-add_province_manpower: Adds %s province manpower
+add_province_manpower: Changes province manpower by %s
+add_yearly_manpower: Changes national manpower by %s years worth of men
 add_years_of_income: Modifies treasury by %s years worth of income
 add_treasury: Changes treasury by %s ducats
 add_trade_node_income: Changes treasury by %s months worth of trade income
@@ -244,6 +245,12 @@ amount: %s will be built
 speed: It will take %s%% of normal time
 cost: It will cost %s%% of the normal amount
 vassalize: Vassalizes %s
+add_great_project: Add the %s great project
+cancel_construction: Cancel construction
+add_liberty_desire: Adds %s liberty desire
+add_accepted_culture: Adds %s as an accepted culture
+free_vassal: Release %s from vassalage
+monarch_power: Uses %s monarch power
 
 SCOPES
 
@@ -340,9 +347,15 @@ every_elector: Every elector:
 any_elector: Any elector:
 any_elector_false: No elector:
 
+random_subject_country: Random subject country:
+every_subject_country: Every subject country:
+any_subject_country: Any subject country:
+any_subject_country_false: No subject country:
+
 revolution_target: The target of the revolution:
 strongest_trade_power: Strongest trade power in node:
 most_province_trade_power: Country with most provincial trade power in node:
+colonial_parent: Colonial parent:
 
 MODIFIERS
 
@@ -355,6 +368,7 @@ adm_tech_cost_modifier: %s%% administrative technology cost
 dip_tech_cost_modifier: %s%% diplomatic technology cost
 mil_tech_cost_modifier: %s%% military technology cost
 global_missionary_strength: %s%% global missionary strength
+global_heretic_missionary_strength: %s%% global missionary strength against heretics
 production_efficiency: %s%% production efficiency modifier
 production_efficiency_false: Lower than %s%% production efficiency modifier
 prestige: %s prestige
@@ -466,6 +480,19 @@ unjustified_demands: %s%% diplomatic point cost for unjustified demands
 hostile_attrition: %s%% attrition for hostile armies
 land_attrition: %s%% attrition for own armies
 blockade_efficiency: %s%% blockade efficiency
+privateer_efficiency: %s%% privateer efficiency
+army_tradition_decay: %s%% army tradition decay
+navy_tradition_decay: %s%% navy tradition decay
+global_trade_goods_size: %s%% goods produced nationally
+enemy_core_creation: %s%% cost for enemy core creation
+envoy_travel_time: %s%% envoy travel time
+ae_impact: %s%% aggressive expansion impact
+vassal_income: %s%% vassal income
+justify_trade_conflict_time: %s%% time required to justify trade conflicts
+improve_relation_modifier: %s%% improve relations modifier
+merchant_steering_to_inland: %s%% merchant steering towards inland
+siege_ability: %s%% siege ability
+global_garrison_growth: %s%% garrison growth
 
 BINARY STATEMENTS
 
@@ -589,6 +616,8 @@ overextension_percentage: Overextension is at least %s%%
 overextension_percentage_false: Overextension is less than %s%%
 has_building: Has the %s building
 has_building_false: Does not have the %s building
+has_construction: Is constructing %s
+has_construction_false: Is not constructing %s
 grain:Has at least %s provinces producing grain
 wine:Has at least %s provinces producing wine
 wool:Has at least %s provinces producing wool
@@ -647,6 +676,8 @@ dominant_religion: The dominant religion is %s
 dominant_religion_false: The dominant religion is not %s
 ai: Is AI controlled
 ai_false: Is not AI controlled
+was_player: Was player controlled
+was_player_false: Wasn't player controlled
 num_of_cities: Has at least %s provinces
 num_of_cities_false: Has less than %s provinces
 years_of_income: Has at least %s years worth of income
@@ -975,3 +1006,19 @@ is_force_converted: Was converted by force
 is_force_converted_false: Was not converted by force
 garrison: Has a garrison of at least %s
 garrison_false: Has a garrison of less than %s
+has_great_project: Has the %s great project
+has_great_project_false: Does not have the %s great project
+is_random_new_world: Random New World enabled
+is_random_new_world_false: Random New World disabled
+is_former_colonial_nation: Is a former colonial nation
+is_former_colonial_nation_false: Is not a former colonial nation
+is_colonial_nation: Is a colonial nation
+is_colonial_nation_false: Is not a colonial nation
+colonial_region: In the colonial region %s
+colonial_region_false: Not in the colonial region %s
+liberty_desire: Liberty desire is at least %s
+liberty_desire_false: Liberty desire is less than %s
+num_of_colonial_subjects: Has at least %s colonial subjects
+num_of_colonial_subjects_false: Has less than %s colonial subjects
+is_tutorial_active: Playing the tutorial
+is_tutorial_active_false: Not playing the tutorial
