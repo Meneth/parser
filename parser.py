@@ -1,7 +1,7 @@
 def main(fileName):
     global outputText, nestingIncrement, nesting
     inputFile = structureFile(fileName, path, folder) #Transcribes game file to more parseable format
-    specialSection, negative, negativeNesting, printSection, base_chance, option, random_list, randomNesting = False, False, False, False, False, False, False, False
+    specialSection, negative, negativeNesting, printSection, base_chance, option, random_list, randomNesting, policyEffects = False, False, False, False, False, False, False, False, False
     value1, value2, modifier, command, value = "", "", "", "", ""
     outputText = []
     for line in inputFile:
@@ -31,7 +31,14 @@ def main(fileName):
                 output("Can only fire once", -1)
             elif nestingIncrement == -1: #End of relevant section
                 printSection = False
-            elif folder == "common\policies" and not "ai_will_do" in line and nestingIncrement == 0:
+                if folder == "common\policies":
+                    policyEffects = True
+            elif folder == "common\policies" and nestingIncrement == 0:
+                if "ai_will_do" in line or "monarch_power" in line:
+                    continue
+                if policyEffects:
+                    output("Effects:", 0)
+                    policyEffects = False
                 line = formatLine(getValues(line)[0], getValues(line)[1], 0, False)[0]
                 if re.match("[0-9]", line):
                     line = "+" + line
@@ -260,12 +267,6 @@ def valueLookup(value, command):
         return "our country", "country"
     if value.lower() == "from":
         return "our country", "country"
-    if value.lower() == "adm":
-        return "administrative", "other"
-    if value.lower() == "mil":
-        return "military", "other"
-    if value.lower() == "dip":
-        return "diplomatic", "other"
 
     #Assign country. 3 capitalized letters in a row is a country tag
     if len(value) == 3 and re.match("[A-Z]{3}", value):

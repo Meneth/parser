@@ -250,7 +250,6 @@ cancel_construction: Cancel construction
 add_liberty_desire: Adds %s liberty desire
 add_accepted_culture: Adds %s as an accepted culture
 free_vassal: Release %s from vassalage
-monarch_power: Uses %s monarch power
 
 SCOPES
 
@@ -383,7 +382,7 @@ manpower_recovery_speed: %s%% manpower recovery speed
 defensiveness: %s%% fort defense modifier
 local_defensiveness: %s%% fort defense modifier
 colonist_placement_chance: %s%% colonist placement chance
-global_colonial_growth: %s%% colonial growth
+global_colonial_growth: %s yearly colonial growth
 light_ship_cost: %s%% light ship cost
 heavy_ship_cost: %s%% heavy ship cost
 galley_cost: %s%% galley cost
@@ -407,11 +406,11 @@ trade_range: %s%% trade range
 trade_range_modifier: %s%% trade range
 inflation_reduction: Reduces inflation by %s per year
 global_tariffs: %s%% global tariffs
-leader_naval_manuever: %s%% admiral maneuver skill
-leader_land_manuever: %s%% general maneuver skill
-leader_siege: %s%% leader siege skill
-leader_shock: %s%% leader shock skill
-leader_fire: %s%% leader fire skill
+leader_naval_manuever: %s admiral maneuver skill
+leader_land_manuever: %s general maneuver skill
+leader_siege: %s leader siege skill
+leader_shock: %s leader shock skill
+leader_fire: %s leader fire skill
 province_trade_power_value: %s%% provincial trade power
 local_tax_modifier: %s%% provincial tax income
 global_ship_recruit_speed: %s%% ship recruitment speed
@@ -433,8 +432,8 @@ army_tradition_false: Less than %s army tradition
 diplomatic_upkeep: %s diplomatic relations limit
 overseas_income: %s%% overseas income
 prestige_from_naval: %s%% prestige from naval battles
-naval_morale: %s naval morale
-land_morale: %s army morale
+naval_morale: %s%% naval morale
+land_morale: %s%% army morale
 recover_army_morale_speed: %s%% army morale recovery
 recover_navy_morale_speed: %s%% navy morale recovery
 global_regiment_recruit_speed: %s%% recruitment time
