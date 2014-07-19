@@ -155,7 +155,7 @@ def main(fileName):
                     line = special[specialType] % (value2, value1)
                 elif specialType in special:
                     line = special[specialType] % (value1, value2)
-            elif specialType in statements:
+            if specialType in statements:
                 line = statements[specialType] % value1
             output(line, negative+1)
             if modifier != "":
@@ -383,12 +383,14 @@ if __name__ == "__main__":
         lookup.update(readDefinitions("flavor_events", path))
         lookup.update(readDefinitions("USA_dlc", path))
         lookup.update(readDefinitions("nw2", path))
+        lookup.update(readDefinitions("sikh", path))
         events = readDefinitions("generic_events", path)
         events.update(readDefinitions("flavor_events", path))
         events.update(readDefinitions("EU4", path))
         events.update(readDefinitions("muslim_dlc", path))
         events.update(readDefinitions("Purple_Phoenix", path))
         events.update(readDefinitions("USA_dlc", path))
+        events.update(readDefinitions("nw2", path))
         with open(path+"/common/event_modifiers/00_event_modifiers.txt") as f:
             modifiers = f.readlines()
 

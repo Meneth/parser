@@ -46,7 +46,8 @@ def valueLookup(value):
 
 def output(command, value): #Outputs line to a temp variable. Written to output file when input file is parsed
     global outputDict
-    outputDict[command] = value
+    if not command in outputDict:
+        outputDict[command] = value
 
 if __name__ == "__main__":
     import cProfile, pstats
@@ -99,6 +100,7 @@ if __name__ == "__main__":
         lookup.update(readDefinitions("core", path))
         lookup.update(readDefinitions("missions", path))
         lookup.update(readDefinitions("diplomacy", path))
+        lookup.update(readDefinitions("nw2", path))
         for fileName in os.listdir("%s/history/countries" % path):
             print("Parsing file %s" % fileName)
             finalOutput.append(main(fileName))
