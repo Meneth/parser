@@ -476,7 +476,7 @@ discovered_relations_impact: %s%% relations impact from covert actions discovere
 rebel_support_efficiency: %s%% rebel support efficiency
 fabricate_claims_time: %s%% claim fabrication time
 unjustified_demands: %s%% diplomatic point cost for unjustified demands
-hostile_attrition: %s%% attrition for hostile armies
+hostile_attrition: %s attrition for hostile armies
 land_attrition: %s%% attrition for own armies
 blockade_efficiency: %s%% blockade efficiency
 privateer_efficiency: %s%% privateer efficiency
@@ -489,9 +489,22 @@ ae_impact: %s%% aggressive expansion impact
 vassal_income: %s%% vassal income
 justify_trade_conflict_time: %s%% time required to justify trade conflicts
 improve_relation_modifier: %s%% improve relations modifier
-merchant_steering_to_inland: %s%% merchant steering towards inland
+merchant_steering_to_inland: %s merchant steering towards inland
 siege_ability: %s%% siege ability
 global_garrison_growth: %s%% garrison growth
+diplomats: %s diplomat
+colonists: %s colonist
+diplomatic_annexation_cost: %s%% diplomatic annexation cost
+global_ship_repair: %s%% global ship repair
+ship_durability: %s%% ship durability
+naval_attrition: %s%% naval attrition
+galley_power: %s%% galley combat ability
+leader_naval_fire: %s naval leader fire
+inflation_action_cost: %s%% inflation reduction cost
+vassal_forcelimit_bonus: %s%% subject forcelimit contribution
+years_of_nationalism: %s years of nationalism
+accepted_culture_threshold: %s%% accepted culture threshold
+culture_conversion_cost: %s%% culture conversion cost
 
 BINARY STATEMENTS
 
@@ -783,8 +796,8 @@ is_emperor: Is the Holy Roman Emperor
 is_emperor_false: Isn't the Holy Roman Emperor
 num_of_unions: Has at least %s unions
 num_of_unions_false: Has less than %s unions
-republican_tradition: Republican tradition is at least %s%%
-republican_tradition_false: Republican tradition is less than %s%%
+republican_tradition: Republican tradition is at least %s
+republican_tradition_false: Republican tradition is less than %s
 inflation: Inflation is less than %s
 inflation_false: Inflation is less than %s
 continent: In the continent %s
