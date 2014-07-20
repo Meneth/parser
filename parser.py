@@ -352,31 +352,29 @@ def output(line, negative): #Outputs line to a temp variable. Written to output 
     if specificFile != "no":
         print(line)
     outputText.append(line + "\n")
-def getIdeaKey(idea1, idea2):
-	key = ""
-	
-	if idea1 < idea2:
-		key = idea1 + "-" + idea2
-	else:
-		key = idea2 + "-" + idea1
-	return key
 
-def addAppendTable(key, value):
+def addAppendTable(key, key2, value):
 	global ideaTable
-	previous = ""	
+	previous = ""
 	
 	if key in ideaTable:
-		previous = ideaTable.get(key)
-		ideaTable[key] = previous + ", " + value
+		if key2 in ideaTable[key]:
+			previous = ideaTable[key][key2]
+			ideaTable[key][key2] = previous + ", " + value			
+			previous = ideaTable[key2][key]
+			ideaTable[key2][key] = previous + ", " + value			
+		else:
+			ideaTable[key][key2] = value	
+			ideaTable[key2][key] = value	
 	else:
-		ideaTable[key] = value
+		ideaTable[key][key2] = value		
+		ideaTable[key2][key] = value	
 
-def policyCutter(fileName, keyPrefix):
-	global ideaTable
+def policyCutter(color):
+	global colorTable, ideaNames
 	
 	doneIdeas = 0	
 	idea1, idea2 = "", ""
-	ideaKey = ""
 		
 	for line in outputText:		
 		if "===" in line: # Reset when we get to a new decision	
@@ -385,6 +383,10 @@ def policyCutter(fileName, keyPrefix):
 			continue	
 		if any(x in line for x in ["Has completed"]): # Idea groups
 			idea = line[20:-12]
+			
+			if not idea in ideaNames:
+				ideaNames[idea] = 1
+				
 			if idea1 == "":
 				idea1 = idea
 			else:
@@ -392,22 +394,23 @@ def policyCutter(fileName, keyPrefix):
 			doneIdeas = doneIdeas + 1
 			
 			if doneIdeas == 2:
-				ideaKey = keyPrefix + getIdeaKey(idea1, idea2)
-				if ideaKey in ideaTable: # If combination has 2 policies
-					ideaKey = ideaKey + str(2)
+				colorTable[idea1][idea2] = color								
+				colorTable[idea2][idea1] = color
 			continue
 		elif "*" in line and doneIdeas == 2 and not any(x in line for x in ["Has completed"]): #Effects
 			effect = line[2:-1]				
-			addAppendTable(ideaKey, effect)									
+			addAppendTable(idea1, idea2, effect)
 			continue
 		else:
-			continue				
+			continue
 
 def generateTable(): 	
-	global outputText
-	outputText = []
-	global ideaTable
-	ideaTable = {}	
+	global outputText, ideaTable, ideaNames, colorTable
+	outputText = []	
+	ideaNames = {}	
+	import collections
+	colorTable = collections.defaultdict(dict)
+	ideaTable = collections.defaultdict(dict)
 	
 	#Uses the regular parser for the files, then takes the processed information and organizes it
 	runADM = "00_adm.txt"			
@@ -415,21 +418,62 @@ def generateTable():
 	runMIL = "00_mil.txt"			
 	
 	main(runADM)	
-	policyCutter(runADM, "ADM-")	
+	policyCutter("#7de77d")
+	outputText = []
 	
 	main(runDIP)
-	policyCutter(runDIP, "DIP-")	
+	policyCutter("#7dc3e7")	
+	outputText = []
 	
 	main(runMIL)
-	policyCutter(runMIL, "MIL-")	
+	policyCutter("#e6e77d")
+	outputText = []
 	
-	with open("output/%s" % "policyRawData-All.txt", "w", encoding="utf-8") as outputFile:
-		for key in sorted(ideaTable):			
-			outputFile.write("".join(key + "="+ ideaTable[key] + "\n"))				
-	
+	with open("output/%s" % "policyWikiTable.txt", "w", encoding="utf-8") as outputFile:				
+		outputFile.write("".join("{| class=\"wikitable\" style=\"text-align:center\"\n|-\n!"))		
+		for key in sorted(ideaNames): #Horizontal idea group headers
+			if key == sorted(ideaNames,reverse=True)[0]: #Skip last
+				continue
+			outputFile.write("".join(" !! "+key[:-6]))		
+		for key in sorted(ideaNames, reverse=True): #Each line
+			if key == sorted(ideaNames)[0]: #Skip last
+				continue
+			outputFile.write("".join("\n|-\n| {{icon|"+key[:-6]+"|46px}}\n"))			
+			for key2 in sorted(ideaNames):
+				if key == key2: # Stop upon reaching yourself
+					break				
+				if key in ideaTable:
+					if key2 in ideaTable[key]:
+						outputFile.write("".join("| style=\"background-color:"+colorTable[key][key2]+"\" | "+icons(ideaTable[key][key2])+"\n"))
+				
+		outputFile.write("".join("|}\n"))	
+def icons(str):
+	result = ""
+	lines = str.split(',')
+		
+	for line in lines:
+		insertIcon = False
+		hasInserted = False
+		for c in line:
+			if c.isalpha():
+				insertIcon = True				
+			
+			if insertIcon and not hasInserted:
+				result = result + "{{icon|"				
+				hasInserted = True
+			result = result + c
+		result = result + "}}<br>"
+	if result.endswith("<br>"):
+		result = result[:-4]
+	return result
+
 def strToBool(str):	
     return str.lower() in ("yes", "true", "t", "1")
-	
+
+import msvcrt as m
+def wait():
+	m.getch()
+
 if __name__ == "__main__":
     import cProfile, pstats
     pr = cProfile.Profile()

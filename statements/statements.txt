@@ -796,8 +796,8 @@ is_emperor: Is the Holy Roman Emperor
 is_emperor_false: Isn't the Holy Roman Emperor
 num_of_unions: Has at least %s unions
 num_of_unions_false: Has less than %s unions
-republican_tradition: Republican tradition is at least %s
-republican_tradition_false: Republican tradition is less than %s
+republican_tradition: Republican tradition is at least %s%%
+republican_tradition_false: Republican tradition is less than %s%%
 inflation: Inflation is less than %s
 inflation_false: Inflation is less than %s
 continent: In the continent %s
