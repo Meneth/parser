@@ -370,7 +370,7 @@ def addAppendTable(key, key2, value):
 		ideaTable[key][key2] = value		
 		ideaTable[key2][key] = value	
 
-def policyCutter(keyPrefix, color):
+def policyCutter(color):
 	global colorTable, ideaNames
 	
 	doneIdeas = 0	
@@ -418,18 +418,18 @@ def generateTable():
 	runMIL = "00_mil.txt"			
 	
 	main(runADM)	
-	policyCutter("ADM-", "#7de77d")
+	policyCutter("#7de77d")
 	outputText = []
 	
 	main(runDIP)
-	policyCutter("DIP-", "#7dc3e7")	
+	policyCutter("#7dc3e7")	
 	outputText = []
 	
 	main(runMIL)
-	policyCutter("MIL-", "#e6e77d")
+	policyCutter("#e6e77d")
 	outputText = []
 	
-	with open("output/%s" % "policyRawData-All.txt", "w", encoding="utf-8") as outputFile:				
+	with open("output/%s" % "policyWikiTable.txt", "w", encoding="utf-8") as outputFile:				
 		outputFile.write("".join("{| class=\"wikitable\" style=\"text-align:center\"\n|-\n!"))		
 		for key in sorted(ideaNames): #Horizontal idea group headers
 			if key == sorted(ideaNames,reverse=True)[0]: #Skip last
