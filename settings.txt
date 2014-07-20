@@ -6,3 +6,6 @@ Folder you want to parse. Decisions, missions, events, and common\policies are a
 
 File you want to parse. "no" in order to parse all files in folder. No .txt extension
 	file: no
+	
+Designate whether the parser should generate policy list (set path above to policies folder)
+	policy: no

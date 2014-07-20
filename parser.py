@@ -1,9 +1,12 @@
 def main(fileName):
-    global outputText, nestingIncrement, nesting
+    global outputText, nestingIncrement, nesting, policy
     inputFile = structureFile(fileName, path, folder) #Transcribes game file to more parseable format
     specialSection, negative, negativeNesting, printSection, base_chance, option, random_list, randomNesting, policyEffects = False, False, False, False, False, False, False, False, False
     value1, value2, modifier, command, value = "", "", "", "", ""
-    outputText = []
+	
+    if policy == "no":
+        outputText = []
+	
     for line in inputFile:
         nesting, nestingIncrement = nestingCheck(line, nesting) #Determines how deeply nested the current line is
         if nesting <= 1:
@@ -47,11 +50,19 @@ def main(fileName):
         else:
             negative, line, negativeNesting = negationCheck(negative, line, negativeNesting)
         if folder == "decisions":
-            if any(x in line for x in ["potential", "allow", "effect"]):
-                printSection = True #Only these sections are relevant
+            if policy == "yes":
+                if any(x in line for x in ["allow", "effect"]):
+                    printSection = True #Only these sections are relevant
+            else:
+                if any(x in line for x in ["potential", "allow", "effect"]):
+                    printSection = True #Only these sections are relevant
         elif folder == "common\policies":
-            if any(x in line for x in ["potential", "allow"]):
-                printSection = True
+            if policy == "yes":
+                if any(x in line for x in ["allow"]):
+                    printSection = True
+            else:
+                if any(x in line for x in ["potential", "allow"]):
+                    printSection = True
         elif folder == "missions":
             if any(x in line for x in ["allow", "success", "abort", "effect"]):
                 if not "abort_effect" in line:
@@ -163,8 +174,9 @@ def main(fileName):
                 modifier = ""
             value1 = ""
             value2 = ""
-    with open("output/%s" % fileName, "w", encoding="utf-8") as outputFile:
-        outputFile.write("".join(outputText))
+    if policy == "no":
+        with open("output/%s" % fileName, "w", encoding="utf-8") as outputFile:
+            outputFile.write("".join(outputText))
  
 def negationCheck(negative, line, negativeNesting):
     #Negation via NOT
@@ -340,7 +352,81 @@ def output(line, negative): #Outputs line to a temp variable. Written to output 
     if specificFile != "no":
         print(line)
     outputText.append(line + "\n")
+def getIdeaKey(idea1, idea2):
+	key = ""
+	
+	if idea1 < idea2:
+		key = idea1 + "-" + idea2
+	else:
+		key = idea2 + "-" + idea1
+	return key
 
+def addAppendTable(key, value):
+	global ideaTable
+	previous = ""	
+	
+	if key in ideaTable:
+		previous = ideaTable.get(key)
+		ideaTable[key] = previous + ", " + value
+	else:
+		ideaTable[key] = value
+
+def policyCutter(fileName, keyPrefix):
+	global ideaTable
+	
+	doneIdeas = 0	
+	idea1, idea2 = "", ""
+	ideaKey = ""
+		
+	for line in outputText:		
+		if "===" in line: # Reset when we get to a new decision	
+			idea1, idea2 = "", ""
+			doneIdeas = 0
+			continue	
+		if any(x in line for x in ["Has completed"]): # Idea groups
+			idea = line[20:-12]
+			if idea1 == "":
+				idea1 = idea
+			else:
+				idea2 = idea
+			doneIdeas = doneIdeas + 1
+			
+			if doneIdeas == 2:
+				ideaKey = keyPrefix + getIdeaKey(idea1, idea2)
+				if ideaKey in ideaTable: # If combination has 2 policies
+					ideaKey = ideaKey + str(2)
+			continue
+		elif "*" in line and doneIdeas == 2 and not any(x in line for x in ["Has completed"]): #Effects
+			effect = line[2:-1]				
+			addAppendTable(ideaKey, effect)									
+			continue
+		else:
+			continue				
+
+def generateTable(): 	
+	global outputText
+	outputText = []
+	global ideaTable
+	ideaTable = {}	
+	
+	#Uses the regular parser for the files, then takes the processed information and organizes it
+	runADM = "00_adm.txt"			
+	runDIP = "00_dip.txt"			
+	runMIL = "00_mil.txt"			
+	
+	main(runADM)	
+	policyCutter(runADM, "ADM-")	
+	
+	main(runDIP)
+	policyCutter(runDIP, "DIP-")	
+	
+	main(runMIL)
+	policyCutter(runMIL, "MIL-")	
+	
+	with open("output/%s" % "policyRawData-All.txt", "w", encoding="utf-8") as outputFile:
+		for key in sorted(ideaTable):			
+			outputFile.write("".join(key + "="+ ideaTable[key] + "\n"))				
+	
 if __name__ == "__main__":
     import cProfile, pstats
     pr = cProfile.Profile()
@@ -355,6 +441,9 @@ if __name__ == "__main__":
     path = settings["path"].replace("\\", "/")
     folder = settings["folder"]
     specificFile = settings["file"]
+    global policy
+    policy = settings["policy"]	
+	
     if folder == "decisions":
         nesting, nestingIncrement = 0, 0
     elif folder == "missions" or folder == "events" or folder == "common\policies":
@@ -399,8 +488,11 @@ if __name__ == "__main__":
                 print("Parsing file %s" % fileName)
                 main(fileName)
         else:
-            fileName = specificFile+".txt"
-            main(fileName)
+            fileName = specificFile+".txt"            
+            if policy == "yes":
+                generateTable()
+            else:
+                main(fileName)
     except FileNotFoundError:
         print("File not found error: Make sure you've set the file path in settings.txt")
     elapsed = time.clock() - start
