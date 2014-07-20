@@ -4,7 +4,7 @@ def main(fileName):
     specialSection, negative, negativeNesting, printSection, base_chance, option, random_list, randomNesting, policyEffects = False, False, False, False, False, False, False, False, False
     value1, value2, modifier, command, value = "", "", "", "", ""
 	
-    if policy == "no":
+    if not policy:
         outputText = []
 	
     for line in inputFile:
@@ -50,14 +50,14 @@ def main(fileName):
         else:
             negative, line, negativeNesting = negationCheck(negative, line, negativeNesting)
         if folder == "decisions":
-            if policy == "yes":
+            if policy:
                 if any(x in line for x in ["allow", "effect"]):
                     printSection = True #Only these sections are relevant
             else:
                 if any(x in line for x in ["potential", "allow", "effect"]):
                     printSection = True #Only these sections are relevant
         elif folder == "common\policies":
-            if policy == "yes":
+            if policy:
                 if any(x in line for x in ["allow"]):
                     printSection = True
             else:
@@ -174,7 +174,7 @@ def main(fileName):
                 modifier = ""
             value1 = ""
             value2 = ""
-    if policy == "no":
+    if not policy:
         with open("output/%s" % fileName, "w", encoding="utf-8") as outputFile:
             outputFile.write("".join(outputText))
  
@@ -427,6 +427,9 @@ def generateTable():
 		for key in sorted(ideaTable):			
 			outputFile.write("".join(key + "="+ ideaTable[key] + "\n"))				
 	
+def strToBool(str):	
+    return str.lower() in ("yes", "true", "t", "1")
+	
 if __name__ == "__main__":
     import cProfile, pstats
     pr = cProfile.Profile()
@@ -442,7 +445,7 @@ if __name__ == "__main__":
     folder = settings["folder"]
     specificFile = settings["file"]
     global policy
-    policy = settings["policy"]	
+    policy = strToBool(settings["policy"])
 	
     if folder == "decisions":
         nesting, nestingIncrement = 0, 0
@@ -489,7 +492,7 @@ if __name__ == "__main__":
                 main(fileName)
         else:
             fileName = specificFile+".txt"            
-            if policy == "yes":
+            if policy:
                 generateTable()
             else:
                 main(fileName)
