@@ -371,7 +371,7 @@ def addAppendTable(key, key2, value):
 		ideaTable[key2][key] = value	
 
 def policyCutter(color):
-	global colorTable, ideaNames
+	global colorTable
 	
 	doneIdeas = 0	
 	idea1, idea2 = "", ""
@@ -383,9 +383,6 @@ def policyCutter(color):
 			continue	
 		if any(x in line for x in ["Has completed"]): # Idea groups
 			idea = line[20:-12]
-			
-			if not idea in ideaNames:
-				ideaNames[idea] = 1
 				
 			if idea1 == "":
 				idea1 = idea
@@ -407,7 +404,11 @@ def policyCutter(color):
 def generateTable(): 	
 	global outputText, ideaTable, ideaNames, colorTable
 	outputText = []	
-	ideaNames = {}	
+	ideagroups= {
+		"adm": {"Administrative", "Economic", "Expansion", "Humanist", "Innovative", "Religious"},
+		"dip": {"Diplomatic", "Espionage", "Exploration", "Influence", "Maritime", "Trade"},
+		"mil": {"Aristocratic", "Defensive", "Naval", "Offensive", "Plutocratic", "Quality", "Quantity"}
+	}
 	import collections
 	colorTable = collections.defaultdict(dict)
 	ideaTable = collections.defaultdict(dict)
@@ -416,6 +417,7 @@ def generateTable():
 	runADM = "00_adm.txt"			
 	runDIP = "00_dip.txt"			
 	runMIL = "00_mil.txt"			
+	ideaSuffix = " Ideas"
 	
 	main(runADM)	
 	policyCutter("#7de77d")
@@ -429,23 +431,32 @@ def generateTable():
 	policyCutter("#e6e77d")
 	outputText = []
 	
-	with open("output/%s" % "policyWikiTable.txt", "w", encoding="utf-8") as outputFile:				
-		outputFile.write("".join("{| class=\"wikitable\" style=\"text-align:center\"\n|-\n!"))		
-		for key in sorted(ideaNames): #Horizontal idea group headers
-			if key == sorted(ideaNames,reverse=True)[0]: #Skip last
-				continue
-			outputFile.write("".join(" !! "+key[:-6]))		
-		for key in sorted(ideaNames, reverse=True): #Each line
-			if key == sorted(ideaNames)[0]: #Skip last
-				continue
-			outputFile.write("".join("\n|-\n| {{icon|"+key[:-6]+"|46px}}\n"))			
-			for key2 in sorted(ideaNames):
-				if key == key2: # Stop upon reaching yourself
-					break				
-				if key in ideaTable:
-					if key2 in ideaTable[key]:
-						outputFile.write("".join("| style=\"background-color:"+colorTable[key][key2]+"\" | "+icons(ideaTable[key][key2])+"\n"))
-				
+	with open("output/%s" % "policyWikiTable.txt", "w", encoding="utf-8") as outputFile:
+		outputFile.write("".join("{| class=\"wikitable\" style=\"text-align:center\"\n|-\n!"))
+		#Headers
+		for key in sorted(ideagroups['dip']): #Horizontal DIP idea group headers
+			outputFile.write("".join(" !! {{icon|"+key+"|46px}}"))
+		for key in sorted(ideagroups['mil']): #Horizontal MIL idea group headers			
+			outputFile.write("".join(" !! {{icon|"+key+"|46px}}"))
+			
+		#Row 1
+		for key in sorted(ideagroups['adm']): #Each cell
+			outputFile.write("".join("\n|-\n| {{icon|"+key+"|46px}}\n"))
+			#ADM & DIP
+			for key2 in sorted(ideagroups['dip']):
+				outputFile.write("".join("| style=\"background-color:"+colorTable[key+ideaSuffix][key2+ideaSuffix]
+                                                         +"\" | "+icons(ideaTable[key+ideaSuffix][key2+ideaSuffix])+"\n"))
+			#ADM & MIL
+			for key2 in sorted(ideagroups['mil']):				
+				outputFile.write("".join("| style=\"background-color:"+colorTable[key+ideaSuffix][key2+ideaSuffix]+"\" | "
+                                                         +icons(ideaTable[key+ideaSuffix][key2+ideaSuffix])+"\n"))
+		#Row 2		
+		for key in sorted(ideagroups['dip']): #Each cell
+			outputFile.write("".join("\n|-\n| {{icon|"+key+"|46px}}\n"))			
+			#DIP & MIL
+			for key2 in sorted(ideagroups['mil']):				
+				outputFile.write("".join("| style=\"background-color:"+colorTable[key+ideaSuffix][key2+ideaSuffix]+"\" | "
+                                                         +icons(ideaTable[key+ideaSuffix][key2+ideaSuffix])+"\n"))
 		outputFile.write("".join("|}\n"))	
 def icons(str):
 	result = ""
