@@ -451,10 +451,10 @@ def generateTable():
 				outputFile.write("".join("| style=\"background-color:"+colorTable[key+ideaSuffix][key2+ideaSuffix]+"\" | "
                                                          +icons(ideaTable[key+ideaSuffix][key2+ideaSuffix])+"\n"))
 		#Row 2		
-		for key in sorted(ideagroups['dip']): #Each cell
+		for key in sorted(ideagroups['mil']): #Each cell
 			outputFile.write("".join("\n|-\n| {{icon|"+key+"|46px}}\n"))			
 			#DIP & MIL
-			for key2 in sorted(ideagroups['mil']):				
+			for key2 in sorted(ideagroups['dip']):				
 				outputFile.write("".join("| style=\"background-color:"+colorTable[key+ideaSuffix][key2+ideaSuffix]+"\" | "
                                                          +icons(ideaTable[key+ideaSuffix][key2+ideaSuffix])+"\n"))
 		outputFile.write("".join("|}\n"))	
