@@ -367,22 +367,22 @@ adm_tech_cost_modifier: %s%% administrative technology cost
 dip_tech_cost_modifier: %s%% diplomatic technology cost
 mil_tech_cost_modifier: %s%% military technology cost
 global_missionary_strength: %s%% global missionary strength
-global_heretic_missionary_strength: %s%% global missionary strength against heretics
-production_efficiency: %s%% production efficiency modifier
+global_heretic_missionary_strength: %s%% global heretic missionary strength
+production_efficiency: %s%% production efficiency
 production_efficiency_false: Lower than %s%% production efficiency modifier
 prestige: %s prestige
 prestige_false: %s prestige
 diplomatic_reputation: %s diplomatic reputation
 papal_influence: %s Papal influence per year
 core_creation: %s%% core-creation cost modifier
-build_cost: %s%% build cost modifier
-global_manpower_modifier: %s%% manpower modifier
+build_cost: %s%% build cost
+global_manpower_modifier: %s%% global manpower modifier
 local_manpower: %s%% manpower modifier
 manpower_recovery_speed: %s%% manpower recovery speed
-defensiveness: %s%% fort defense modifier
-local_defensiveness: %s%% fort defense modifier
-colonist_placement_chance: %s%% colonist placement chance
-global_colonial_growth: %s yearly colonial growth
+defensiveness: %s%% fort defence
+local_defensiveness: %s%% local defensiveness
+colonist_placement_chance: %s%% colonist chance
+global_colonial_growth: %s global settler increase
 light_ship_cost: %s%% light ship cost
 heavy_ship_cost: %s%% heavy ship cost
 galley_cost: %s%% galley cost
@@ -395,7 +395,7 @@ artillery_cost: %s%% artillery cost
 global_regiment_cost: %s%% regiment cost
 mercenary_cost: %s%% mercenary cost
 land_maintenance_modifier: %s%% land maintenance
-global_trade_income_modifier: %s%% global trade income
+global_trade_income_modifier: %s%% global trade income modifier
 merchants: %s merchants
 global_trade_power: %s%% trade power
 global_own_trade_power: %s%% domestic trade power
@@ -406,14 +406,18 @@ trade_range: %s%% trade range
 trade_range_modifier: %s%% trade range
 inflation_reduction: Reduces inflation by %s per year
 global_tariffs: %s%% global tariffs
-leader_naval_manuever: %s admiral maneuver skill
-leader_land_manuever: %s general maneuver skill
-leader_siege: %s leader siege skill
-leader_shock: %s leader shock skill
-leader_fire: %s leader fire skill
+leader_land_manuever: %s land leader maneuver
+leader_naval_manuever: %s naval leader maneuver
+leader_siege: %s land leader siege
+leader_shock: %s land leader shock
+leader_land_shock: %s land leader shock 
+leader_fire: %s land leader fire
+leader_land_fire: %s leader land fire
+leader_naval_fire: %s naval leader fire
+leader_naval_shock: %s naval leader shock
 province_trade_power_value: %s%% provincial trade power
 local_tax_modifier: %s%% provincial tax income
-global_ship_recruit_speed: %s%% ship recruitment speed
+global_ship_recruit_speed: %s%% global ship recruit speed
 ship_recruit_speed: %s%% ship recruitment speed
 tolerance_heretic: %s tolerance of heretics
 tolerance_own: %s tolerance of the true faith
@@ -421,10 +425,10 @@ tolerance_heathen: %s tolerance of heathens
 religious_unity: %s%% religious unity
 religious_unity_false: Less than %s%% religious unity
 culture_group_union: Makes all cultures in the %s culture group accepted
-spy_offence: %s%% spy offence
-global_spy_defence: %s%% spy defence
+spy_offence: %s%% spy offense
+global_spy_defence: %s%% global spy defence
 discipline: %s%% discipline
-naval_forcelimit_modifier: %s%% naval force limit
+naval_forcelimit_modifier: %s%% naval forcelimit
 navy_tradition: %s navy tradition
 navy_tradition_false: Less than %s navy tradition
 army_tradition: %s army tradition
@@ -433,9 +437,9 @@ diplomatic_upkeep: %s diplomatic relations limit
 overseas_income: %s%% overseas income
 prestige_from_naval: %s%% prestige from naval battles
 naval_morale: %s%% naval morale
-land_morale: %s%% army morale
-recover_army_morale_speed: %s%% army morale recovery
-recover_navy_morale_speed: %s%% navy morale recovery
+land_morale: %s%% land morale
+recover_army_morale_speed: %s%% land morale recovery
+recover_navy_morale_speed: %s%% naval morale recovery
 global_regiment_recruit_speed: %s%% recruitment time
 change_unit_type: Changes unit types to %s
 change_technology_group: Changes technology group to %s
@@ -450,18 +454,18 @@ local_revolt_risk: %s revolt risk
 trade_value: %s trade value
 trade_goods_size: %s%% trade goods output
 global_prov_trade_power_modifier: %s%% provincial trade power
-land_forcelimit_modifier: %s%% land force limit
+land_forcelimit_modifier: %s%% land forcelimit
 local_missionary_strength: %s%% missionary strength
 local_colonial_growth: %s colonial growth
 reinforce_speed: %s%% reinforcement speed
 colonist_time: %s%% colonist travel time
 trade_value_modifier: %s%% trade value
-interest: %s percent interest
+interest: %s interest
 heir_chance: %s%% chance of getting an heir
 local_tariffs: %s%% tariffs
 local_production_efficiency: %s%% production efficiency
 prestige_from_land: %s%% prestige from land battles
-advisor_cost: %s%% advisor costs
+advisor_cost: %s%% advisor cost
 advisor_pool: %s%% available advisors
 prestige_decay: %s%% prestige decay
 infantry_power: %s%% infantry power
@@ -476,19 +480,19 @@ discovered_relations_impact: %s%% relations impact from covert actions discovere
 rebel_support_efficiency: %s%% rebel support efficiency
 fabricate_claims_time: %s%% claim fabrication time
 unjustified_demands: %s%% diplomatic point cost for unjustified demands
-hostile_attrition: %s attrition for hostile armies
-land_attrition: %s%% attrition for own armies
+hostile_attrition: %s hostile attrition
+land_attrition: %s%% land attrition
 blockade_efficiency: %s%% blockade efficiency
 privateer_efficiency: %s%% privateer efficiency
 army_tradition_decay: %s%% army tradition decay
 navy_tradition_decay: %s%% navy tradition decay
 global_trade_goods_size: %s%% goods produced nationally
-enemy_core_creation: %s%% cost for enemy core creation
+enemy_core_creation: %s%% hostile core-creation cost on us
 envoy_travel_time: %s%% envoy travel time
 ae_impact: %s%% aggressive expansion impact
 vassal_income: %s%% vassal income
-justify_trade_conflict_time: %s%% time required to justify trade conflicts
-improve_relation_modifier: %s%% improve relations modifier
+justify_trade_conflict_time: %s%% time to justify trade conflict
+improve_relation_modifier: %s%% improve relation modifier
 merchant_steering_to_inland: %s merchant steering towards inland
 siege_ability: %s%% siege ability
 global_garrison_growth: %s%% garrison growth
@@ -499,12 +503,12 @@ global_ship_repair: %s%% global ship repair
 ship_durability: %s%% ship durability
 naval_attrition: %s%% naval attrition
 galley_power: %s%% galley combat ability
-leader_naval_fire: %s naval leader fire
 inflation_action_cost: %s%% inflation reduction cost
-vassal_forcelimit_bonus: %s%% subject forcelimit contribution
+vassal_forcelimit_bonus: %s%% vassal forcelimit bonus
 years_of_nationalism: %s years of nationalism
 accepted_culture_threshold: %s%% accepted culture threshold
 culture_conversion_cost: %s%% culture conversion cost
+global_unrest: %s global unrest
 
 BINARY STATEMENTS
 
@@ -796,8 +800,8 @@ is_emperor: Is the Holy Roman Emperor
 is_emperor_false: Isn't the Holy Roman Emperor
 num_of_unions: Has at least %s unions
 num_of_unions_false: Has less than %s unions
-republican_tradition: Republican tradition is at least %s%%
-republican_tradition_false: Republican tradition is less than %s%%
+republican_tradition: Republican tradition is at least %s
+republican_tradition_false: Republican tradition is less than %s
 inflation: Inflation is less than %s
 inflation_false: Inflation is less than %s
 continent: In the continent %s
