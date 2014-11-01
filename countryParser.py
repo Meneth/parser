@@ -88,6 +88,7 @@ if __name__ == "__main__":
         countries = readDefinitions("countries", path)
         countries.update(readDefinitions("text", path))
         countries.update(readDefinitions("EU4", path))
+        countries.update(readDefinitions("tags_phase4", path))
         lookup = readDefinitions("EU4", path)
         lookup.update(readDefinitions("nw", path))
         lookup.update(readDefinitions("text", path))
@@ -101,6 +102,8 @@ if __name__ == "__main__":
         lookup.update(readDefinitions("missions", path))
         lookup.update(readDefinitions("diplomacy", path))
         lookup.update(readDefinitions("nw2", path))
+        lookup.update(readDefinitions("aow", path))
+        lookup.update(readDefinitions("cultures_phase4", path))
         for fileName in os.listdir("%s/history/countries" % path):
             print("Parsing file %s" % fileName)
             finalOutput.append(main(fileName))
