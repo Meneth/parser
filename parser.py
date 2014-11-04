@@ -481,10 +481,6 @@ def icons(str):
 def strToBool(str):	
     return str.lower() in ("yes", "true", "t", "1")
 
-import msvcrt as m
-def wait():
-	m.getch()
-
 if __name__ == "__main__":
     import cProfile, pstats
     pr = cProfile.Profile()
