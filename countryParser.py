@@ -29,6 +29,7 @@ def main(fileName):
     except UnboundLocalError:
         return ""
 
+
 def valueLookup(value):
     try:
         return provinces["PROV"+value]
@@ -44,8 +45,29 @@ def valueLookup(value):
         pass
     return value
 
+
+def parseCultures():
+    global nesting
+    cultures = {}
+    inputFile = structureFile("00_cultures.txt", path, "common/cultures/")
+    for line in inputFile:
+        nesting, nestingIncrement = nestingCheck(line, nesting)
+        if nestingIncrement == 1:
+            if nesting == 1:
+                group = valueLookup(getValues(line)[0])
+            elif nesting == 2:
+                culture = valueLookup(getValues(line)[0])
+                cultures[culture] = "%s (%s)" % (culture, group)
+    nesting = 0
+    return cultures
+
+
 def output(command, value): #Outputs line to a temp variable. Written to output file when input file is parsed
     global outputDict
+    if command == "religion" or command == "technology_group":
+        value = "[[File:%s.png]]%s" % (value, value)
+    if command == "primary_culture":
+        value = cultures[value]
     if not command in outputDict:
         outputDict[command] = value
 
@@ -89,6 +111,7 @@ if __name__ == "__main__":
         countries.update(readDefinitions("text", path))
         countries.update(readDefinitions("EU4", path))
         countries.update(readDefinitions("tags_phase4", path))
+        countries.update(readDefinitions("eldorado", path))
         lookup = readDefinitions("EU4", path)
         lookup.update(readDefinitions("nw", path))
         lookup.update(readDefinitions("text", path))
@@ -104,6 +127,9 @@ if __name__ == "__main__":
         lookup.update(readDefinitions("nw2", path))
         lookup.update(readDefinitions("aow", path))
         lookup.update(readDefinitions("cultures_phase4", path))
+        lookup.update(readDefinitions("religion", path))
+        cultures = parseCultures()
+
         for fileName in os.listdir("%s/history/countries" % path):
             print("Parsing file %s" % fileName)
             finalOutput.append(main(fileName))

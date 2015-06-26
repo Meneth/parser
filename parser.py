@@ -527,6 +527,7 @@ if __name__ == "__main__":
         lookup.update(readDefinitions("USA_dlc", path))
         lookup.update(readDefinitions("nw2", path))
         lookup.update(readDefinitions("sikh", path))
+        lookup.update(readDefinitions("tags_phase4", path))
         events = readDefinitions("generic_events", path)
         events.update(readDefinitions("flavor_events", path))
         events.update(readDefinitions("EU4", path))
