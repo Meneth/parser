@@ -62,14 +62,34 @@ def parseCultures():
     return cultures
 
 
+def parseGovernments():
+    global nesting
+    governments = {}
+    inputFile = structureFile("00_governments.txt", path, "common/governments/")
+    for line in inputFile:
+        nesting, nestingIncrement = nestingCheck(line, nesting)
+        if nesting == 1:
+            if nestingIncrement == 1:
+                government = valueLookup(getValues(line)[0])
+            else:
+                command = getValues(line)[0]
+                if command in govTypes.keys():
+                    governments[government] = govTypes[command]
+    nesting = 0
+    return governments
+
+
 def output(command, value): #Outputs line to a temp variable. Written to output file when input file is parsed
     global outputDict
+    if command in outputDict:
+        return
     if command == "religion" or command == "technology_group":
         value = "[[File:%s.png]]%s" % (value, value)
-    if command == "primary_culture":
+    elif command == "primary_culture":
         value = cultures[value]
-    if not command in outputDict:
-        outputDict[command] = value
+    elif command == "government":
+        value = "[[File:Government %s.png]]%s" % (governments[value], value)
+    outputDict[command] = value
 
 if __name__ == "__main__":
     import cProfile, pstats
@@ -129,6 +149,11 @@ if __name__ == "__main__":
         lookup.update(readDefinitions("cultures_phase4", path))
         lookup.update(readDefinitions("religion", path))
         cultures = parseCultures()
+        govTypes = {
+            "monarchy": "monarchy", "republic": "republic", "dictatorship": "republic",
+            "nomad": "steppe horde", "tribal": "tribal", "native_mechanic": "tribal", "religion": "theocracy"
+        }
+        governments = parseGovernments()
 
         for fileName in os.listdir("%s/history/countries" % path):
             print("Parsing file %s" % fileName)
