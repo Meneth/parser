@@ -10,6 +10,7 @@ def readStatements(localisationName):
 
     return localisation
 
+
 #Reads in a definition file as a dictionary
 def readDefinitions(name, path):
     definitions = {}
@@ -28,6 +29,7 @@ def readDefinitions(name, path):
 
     return definitions
 
+
 #Splits the file at every bracket to ensure proper parsing
 def structureFile(name, path, folder):
     functionOutput = []
@@ -45,7 +47,7 @@ def structureFile(name, path, folder):
                 count = line.count("=")
                 if count > 1:
                     for values in range(count):
-                        line = re.sub("(=[\s]*[\w\.]*) ([\w\.]*[\s]*=)", "\g<1>\n\g<2>", line) #Splits lines with more than one statement in two
+                        line = re.sub(lineSplit, "\g<1>\n\g<2>", line) #Splits lines with more than one statement in two
             if "\n" in line:
                 parts = line.split("\n")
                 for p in parts:
@@ -53,6 +55,7 @@ def structureFile(name, path, folder):
             else:
                 functionOutput.append(line)
     return functionOutput
+
 
 #Determines the current level of nesting
 def nestingCheck(line, nesting):
@@ -66,6 +69,7 @@ def nestingCheck(line, nesting):
         nestingIncrement = -1
     return nesting, nestingIncrement
 
+
 def getValues(line):
     line = line.split("=")
     line[0] = line[0].strip()
@@ -76,3 +80,8 @@ def getValues(line):
         return line[0], ""
 
 import re
+lineSplit = re.compile(r"""
+(=[\s]*[\w\.]*) # Value of preceding command/value pair
+\s+             # Space between command/value pairs
+([\w\.]*[\s]*=) # The command of the following command/value pair
+""", re.VERBOSE)

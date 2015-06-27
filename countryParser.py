@@ -83,12 +83,14 @@ def output(command, value): #Outputs line to a temp variable. Written to output 
     global outputDict
     if command in outputDict:
         return
-    if command == "religion" or command == "technology_group":
-        value = "[[File:%s.png]]%s" % (value, value)
+    if command == "religion":
+        value = "[[File:%s.png|link=%s]]%s" % (value, value, value)
+    elif command == "technology_group":
+        value = "[[File:%s.png|link=]]%s" % (value, value)
     elif command == "primary_culture":
         value = cultures[value]
     elif command == "government":
-        value = "[[File:Government %s.png]]%s" % (governments[value], value)
+        value = "[[File:Government %s.png|link=%s]]%s" % (governments[value], value, value)
     outputDict[command] = value
 
 if __name__ == "__main__":
